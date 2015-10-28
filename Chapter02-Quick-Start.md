@@ -209,6 +209,143 @@ JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起�
 `ReactDOM`模塊提供了一些 DOM 相關的方法，而`React`包含了 React 團隊分享的不同平台上的核心工具（例如，[React Native](http://facebook.github.io/react-native/)）。
 
 ### 建構元件
+讓我們為`CommentList`和`CommentForm`建立骨架，它們也是由一些簡單的`<div>`組成。將這兩個組件的程式碼添加到你的原始碼中，保留已有的`CommentBox`聲明和`ReactDOM.render`調用：
 
+	// tutorial2.js
+	var CommentList = React.createClass({
+	  render: function() {
+	    return (
+	      <div className="commentList">
+	        Hello, world! I am a CommentList.
+	      </div>
+	    );
+	  }
+	});
+	
+	var CommentForm = React.createClass({
+	  render: function() {
+	    return (
+	      <div className="commentForm">
+	        Hello, world! I am a CommentForm.
+	      </div>
+	    );
+	  }
+	});
+
+接下來，更新`CommentBox`元件程式碼，使用新建立的元件：
+
+	// tutorial3.js 
+	var  CommentBox  =  React . createClass ({ 
+	  render :  function ()  { 
+	    return  ( 
+	      < div  className = "commentBox" > 
+	        < h1 > Comments < /h1> 
+	        < CommentList  /> 
+	        < CommentForm  />
+	       < /div> 
+	    ) ; 
+	  } 
+	});
+
+注意我們是如何整合 HTML 標籤和我們所創建的元件。HTML 元件就是普通的 React 元件，就和你定義的元件一樣，只不過有一處不同。JSX 編譯器會自動重寫 HTML 標籤為 React.createElement(tagName) 表達式，其它什麼都不做。這是為了避免全局命名空間污染。
+
+#### 使用屬性(props)
+讓我們創建`Comment`元件，依賴於從父級傳入的​​資料。從父元件傳入的資料會被當做為子元件的屬性（property），這些屬性可以套過`this.props`存取。使用屬性（props），我們就可以存取到從`CommentList`傳到`Comment`的資料，然後渲染一些標記：
+
+	// tutorial4.js
+	var Comment = React.createClass({
+	  render: function() {
+	    return (
+	      <div className="comment">
+	        <h2 className="commentAuthor">
+	          {this.props.author}
+	        </h2>
+	        {this.props.children}
+	      </div>
+	    );
+	  }
+	});
+
+在 JSX 中，通過使用大括號包住一個 JavaScript 表達式（例如作為屬性或者子節點），你可以在樹結構中生成文本或者 React 元件。我們通過`this.props`來存取傳入元件的資料，鍵名就是對應的命名屬性，也可以通過`this.props.children`訪問元件內嵌的任何元素。
+
+#### 元件屬性
+現在我們定義了`Comment`元件，我們想傳遞給它作者名稱和評論，以便於我們能夠對每一個獨立的評論重用使用相同的程式碼。首先讓我們添加一些評論到`CommentList`：
+
+	// tutorial5.js
+	var CommentList = React.createClass({
+	  render: function() {
+	    return (
+	      <div className="commentList">
+	        <Comment author="Pete Hunt">This is one comment</Comment>
+	        <Comment author="Jordan Walke">This is *another* comment</Comment>
+	      </div>
+	    );
+	  }
+	});
+
+請注意，我們從父`CommentList`元件傳遞給子`Comment`元件一些資料。例如，我們傳遞了*Pete Hunt*（透過屬性）和`This is one comment`（通過類似於XML的子節點）給第一個`Comment`元件。正如前面說的那樣，`Comment`元件通過`this.props.author`和`this.props.children`來訪問這些“屬性”。
+
+#### 添加 Markdown 的格式
+Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號包裹文本將會使其強調突出。
+
+首先，加入第三方的 **marked** library 到你的應用程式。這是一個將 Markdown 文本轉換成原生HTML 的 JavaScript library。在頂部加一個 script 標籤（我們已經在 React 運作區上包含了這個標籤）：
+
+	<!-- index.html -->
+	<head>
+	  <meta charset="utf-8" />
+	  <title>React Tutorial</title>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+	</head>
+
+接下來，將評論轉換成 Markdown，然後輸出：
+
+	// tutorial6.js
+	var Comment = React.createClass({
+	  render: function() {
+	    return (
+	      <div className="comment">
+	        <h2 className="commentAuthor">
+	          {this.props.author}
+	        </h2>
+	        {marked(this.props.children.toString())}
+	      </div>
+	    );
+	  }
+	});
+
+這裡我們唯一需要做的就是調用 marked library。我們需要把`this.props.children`從 React 的包裹文本轉換成 marked 能處理的原始字符串，所以我們明顯地調用了`toString()`。
+
+但是這裡有一個問題！我們渲染的評論內容在瀏覽器裡面看起來像這樣：“ `<p>` This is `<em>` another `</em>` comment `</p>` ”。我們希望這些標籤能夠真正地渲染成 HTML。
+
+那是 React 在保護你免受 XSS 攻擊。這裡有一種方法解決這個問題，但是框架會警告你別使用這種方法：
+
+	// tutorial7.js
+	var Comment = React.createClass({
+	  rawMarkup: function() {
+	    var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
+	    return { __html: rawMarkup };
+	  },
+	
+	  render: function() {
+	    return (
+	      <div className="comment">
+	        <h2 className="commentAuthor">
+	          {this.props.author}
+	        </h2>
+	        <span dangerouslySetInnerHTML={this.rawMarkup()} />
+	      </div>
+	    );
+	  }
+	});
+
+這是一個特殊的API，故意讓插入原始的 HTML 變得困難，但是對於 marked ，我們將利用這個後門。
+
+**記住：**使用這個功能，你的程式碼就要依賴於 marked 的安全性。在這情況中，我們傳入`sanitize: true`，告訴 marked 轉換掉評論文本中的 HTML 標籤而不是直接原封不動地返回這些標籤。
+
+#### 接入數據模型
 
 ## Thinking in React
