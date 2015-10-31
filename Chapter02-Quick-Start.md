@@ -1,12 +1,11 @@
-# Quick Start
-## Getting Started
-### JSFiddle
+# Getting Started
+## JSFiddle
 開始學習 React 最簡單的方式就是使用以下 JSFiddle 的 Hello World 範例：
 
 * [React JSFiddle](https://jsfiddle.net/reactjs/69z2wepo/)
 * [React JSFiddle without JSX](https://jsfiddle.net/reactjs/5vjqabv3/)
 
-### 從 npm 開始使用 React
+## 從 npm 開始使用 React
 我們建議配合類似 *browserify* 或 *webpack* 的CommonJS 模組系統使用 React。
 使用`react`和`react-dom`的 npm 套件。
 
@@ -25,7 +24,7 @@ To install React DOM and build your bundle after installing browserify:
 	$ npm install --save react react-dom
 	$ browserify -t babelify main.js -o bundle.js
 
-### 不藉由 npm 快速開始
+## 不藉由 npm 快速開始
 如果你還沒準備好使用 npm，你可以下載初学者教程包(Starter Kit)，包含了未預建置前的 React 和 React DOM 版本。
 
 在 Starter Kit 的根目錄，建立一個包含以下內容的`helloworld.html`。
@@ -52,7 +51,7 @@ To install React DOM and build your bundle after installing browserify:
 
 在 JavaScript 裡寫著 XML 格式的程式碼稱為 JSX，可以在 [JSX](https://facebook.github.io/react/docs/jsx-in-depth.html) 學到更多相關知識。為了把 JSX 轉成標準的 JavaScript，我們用`<script type="text/babel">`和引入 Babel 來在瀏覽器實現轉換。
 
-#### 分離檔案
+### 分離檔案
 編寫的 React JSX 程式碼可以分離開來，創建`src/helloworld.js`，內容如下：
 
 	ReactDOM.render(
@@ -65,7 +64,7 @@ To install React DOM and build your bundle after installing browserify:
 
 >Note：某些瀏覽器（如，Chrome 瀏覽器）將無法載入該檔案，除非是套過 HTTP。
 
-#### 離線轉換
+### 離線轉換
 第一步，先透過 command-line 使用 [npm](https://www.npmjs.com/) 安裝 [Babel](http://babeljs.io/)  
 `npm install --global babel`
 
@@ -99,7 +98,8 @@ To install React DOM and build your bundle after installing browserify:
 更多工具可以查看這邊
 `https://github.com/facebook/react/wiki/Complementary-Tools`
 
-## Tutorial
+---
+# Tutorial
 我們將建立一個簡單但是實用的評論框，可以將它放入你的部落格。一個類似於 Disqus, LiveFyre 或 Facebook 的即時評論的基本版本。
 將會提供：
 
@@ -208,7 +208,7 @@ JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起�
 
 `ReactDOM`模塊提供了一些 DOM 相關的方法，而`React`包含了 React 團隊分享的不同平台上的核心工具（例如，[React Native](http://facebook.github.io/react-native/)）。
 
-### 建構元件
+## 建構元件
 讓我們為`CommentList`和`CommentForm`建立骨架，它們也是由一些簡單的`<div>`組成。將這兩個組件的程式碼添加到你的原始碼中，保留已有的`CommentBox`聲明和`ReactDOM.render`調用：
 
 	// tutorial2.js
@@ -249,7 +249,7 @@ JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起�
 
 注意我們是如何整合 HTML 標籤和我們所創建的元件。HTML 元件就是普通的 React 元件，就和你定義的元件一樣，只不過有一處不同。JSX 編譯器會自動重寫 HTML 標籤為 React.createElement(tagName) 表達式，其它什麼都不做。這是為了避免全局命名空間污染。
 
-#### 使用屬性(props)
+### 使用屬性(props)
 讓我們創建`Comment`元件，依賴於從父級傳入的​​資料。從父元件傳入的資料會被當做為子元件的屬性（property），這些屬性可以套過`this.props`存取。使用屬性（props），我們就可以存取到從`CommentList`傳到`Comment`的資料，然後渲染一些標記：
 
 	// tutorial4.js
@@ -268,7 +268,7 @@ JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起�
 
 在 JSX 中，通過使用大括號包住一個 JavaScript 表達式（例如作為屬性或者子節點），你可以在樹結構中生成文本或者 React 元件。我們通過`this.props`來存取傳入元件的資料，鍵名就是對應的命名屬性，也可以通過`this.props.children`訪問元件內嵌的任何元素。
 
-#### 元件屬性
+### 元件屬性
 現在我們定義了`Comment`元件，我們想傳遞給它作者名稱和評論，以便於我們能夠對每一個獨立的評論重用使用相同的程式碼。首先讓我們添加一些評論到`CommentList`：
 
 	// tutorial5.js
@@ -285,7 +285,7 @@ JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起�
 
 請注意，我們從父`CommentList`元件傳遞給子`Comment`元件一些資料。例如，我們傳遞了*Pete Hunt*（透過屬性）和`This is one comment`（通過類似於XML的子節點）給第一個`Comment`元件。正如前面說的那樣，`Comment`元件通過`this.props.author`和`this.props.children`來訪問這些“屬性”。
 
-#### 添加 Markdown 的格式
+### 添加 Markdown 的格式
 Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號包裹文本將會使其強調突出。
 
 首先，加入第三方的 **marked** library 到你的應用程式。這是一個將 Markdown 文本轉換成原生HTML 的 JavaScript library。在頂部加一個 script 標籤（我們已經在 React 運作區上包含了這個標籤）：
@@ -346,6 +346,415 @@ Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號�
 
 **記住：**使用這個功能，你的程式碼就要依賴於 marked 的安全性。在這情況中，我們傳入`sanitize: true`，告訴 marked 轉換掉評論文本中的 HTML 標籤而不是直接原封不動地返回這些標籤。
 
-#### 接入數據模型
+### 接入數據模型
+到目前為止，已經在原始碼裡面直接插入了評論。讓我們將這些評論資料抽出來，放在一個 JSON 格式的變量中，然後將這個 JSON 資料渲染到評論列表。到最後，數據將會來自服務器，但是現在，直接寫在源代碼中：
 
-## Thinking in React
+	// tutorial8.js
+	var data = [
+	  {author: "Pete Hunt", text: "This is one comment"},
+	  {author: "Jordan Walke", text: "This is *another* comment"}
+	];
+
+我們需要用一種模組化的方式將數據傳入到`CommentList`。修改`CommentBox`和`React.render()`方法，通過`props`傳遞數據到`CommentList`：
+
+	// tutorial9.js
+	var CommentBox = React.createClass({
+	  render: function() {
+	    return (
+	      <div className="commentBox">
+	        <h1>Comments</h1>
+	        <CommentList data={this.props.data} />
+	        <CommentForm />
+	      </div>
+	    );
+	  }
+	});
+	
+	ReactDOM.render(
+	  <CommentBox data={data} />,
+	  document.getElementById('content')
+	);
+
+現在資料已經可以在`CommentList`中使用了，讓我們動態地渲染評論：
+
+	// tutorial10.js
+	var CommentList = React.createClass({
+	  render: function() {
+	    var commentNodes = this.props.data.map(function (comment) {
+	      return (
+	        <Comment author={comment.author}>
+	          {comment.text}
+	        </Comment>
+	      );
+	    });
+	    return (
+	      <div className="commentList">
+	        {commentNodes}
+	      </div>
+	    );
+	  }
+	});
+
+### 從伺服器獲取資料
+當要從伺服器動態獲取的資料替換範例資料。可以刪掉 data 屬性，換上一個 URL 來獲取數據：
+
+	// tutorial11.js
+	ReactDOM.render(
+	  <CommentBox url="/api/comments" />,
+	  document.getElementById('content')
+	);
+
+這個元件和前面的元件是不一樣的，因為它必須重新渲染自己。在伺服器請求返回之前，該元件將不會有任何資料，等到請求返回之後，該元件可能會要渲染一些新的評論。
+
+>**Note：**到此步驟，程式還沒辦法運作
+
+### 響應狀態變化(Reactive state)
+到目前為止，每一個元件都根據自己的`props`渲染了自己一次。`props`是不可變的：它們從父元件傳遞過來，“屬於”父元件。為了實現互動，我們給元件引入了可變的 **state**。`this.state`是元件私有的，可以通過調用`this.setState()`來改變它。當 state 更新之後，元件就會重新渲染自己。
+
+`render()`方法依賴於`this.props`和`this.state`，框架會確保渲染出來的 UI 界面總是與輸入（`this.props`和`this.state`）保持一致。
+
+當伺服器拿到評論資料的時候，將會改變我們有的評論資料。讓我們給`CommentBox`組件添加一個評論陣列作為它的`state`：
+
+	// tutorial12.js
+	var CommentBox = React.createClass({
+	  getInitialState: function() {
+	    return {data: []};
+	  },
+	  render: function() {
+	    return (
+	      <div className="commentBox">
+	        <h1>Comments</h1>
+	        <CommentList data={this.state.data} />
+	        <CommentForm />
+	      </div>
+	    );
+	  }
+	});
+
+`getInitialState()`在元件的生命週期中僅執行一次，用於設置元件的初始`state`。
+
+#### 更新 state
+在元件第一次創建的時候，我們想從伺服器得到（使用 GET 方法）一些 JSON 資料來更新狀態，以便顯示最新的資料。我們將會使用 jQuery 發送一個非同步請求到我們之前啟動好的伺服器，得到我們需要的資料。資料格式和相應代碼看起來會是這個樣子：
+
+	[
+	  {"author": "Pete Hunt", "text": "This is one comment"},
+	  {"author": "Jordan Walke", "text": "This is *another* comment"}
+	]
+
+<br/>
+
+	// tutorial13.js
+	var CommentBox = React.createClass({
+	  getInitialState: function() {
+	    return {data: []};
+	  },
+	  componentDidMount: function() {
+	    $.ajax({
+	      url: this.props.url,
+	      dataType: 'json',
+	      cache: false,
+	      success: function(data) {
+	        this.setState({data: data});
+	      }.bind(this),
+	      error: function(xhr, status, err) {
+	        console.error(this.props.url, status, err.toString());
+	      }.bind(this)
+	    });
+	  },
+	  render: function() {
+	    return (
+	      <div className="commentBox">
+	        <h1>Comments</h1>
+	        <CommentList data={this.state.data} />
+	        <CommentForm />
+	      </div>
+	    );
+	  }
+	});
+
+這裡`componentDidMount`是一個元件渲染的時候會被 React 自動調用的方法。動態更新界面的關鍵點就是調用`this.setState()`。我們用從伺服器拿到的新資料來替換掉老的評論陣列，然後 UI 自動更新。有了這種反應機制，實現即時更新僅需要一小點改動。在這裡我們使用簡單的輪詢，但是你也可以很簡單地改為使用 WebSockets 或者其他技術。
+
+	// tutorial14.js
+	var CommentBox = React.createClass({
+	  loadCommentsFromServer: function() {
+	    $.ajax({
+	      url: this.props.url,
+	      dataType: 'json',
+	      cache: false,
+	      success: function(data) {
+	        this.setState({data: data});
+	      }.bind(this),
+	      error: function(xhr, status, err) {
+	        console.error(this.props.url, status, err.toString());
+	      }.bind(this)
+	    });
+	  },
+	  getInitialState: function() {
+	    return {data: []};
+	  },
+	  componentDidMount: function() {
+	    this.loadCommentsFromServer();
+	    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+	  },
+	  render: function() {
+	    return (
+	      <div className="commentBox">
+	        <h1>Comments</h1>
+	        <CommentList data={this.state.data} />
+	        <CommentForm />
+	      </div>
+	    );
+	  }
+	});
+	
+	ReactDOM.render(
+	  <CommentBox url="/api/comments" pollInterval={2000} />,
+	  document.getElementById('content')
+	);
+
+這裡，我們只需把 AJAX 移到另一個個別的方法中，在元件第一次載入的時候，以及之後每隔兩秒鐘都會呼叫這個方法。嘗試在你的瀏覽器中運行程式，然後改變`comments.json`文件(在server源碼文件夾中)；在兩秒鐘之內，改動將會顯示出來！
+
+### 新增評論
+現在可以開始構造表單了。我們的`CommentForm`元件應該詢問用戶的名字和評論內容，然後發送一個請求到服務器，保存這條評論。
+
+	// tutorial15.js
+	var CommentForm = React.createClass({
+	  render: function() {
+	    return (
+	      <form className="commentForm">
+	        <input type="text" placeholder="Your name" />
+	        <input type="text" placeholder="Say something..." />
+	        <input type="submit" value="Post" />
+	      </form>
+	    );
+	  }
+	});
+
+讓我們使表單可互動。當用戶提交表單的時候，我們應該清空表單，發送一個請求到服務器，然後刷新評論列表。首先，讓我們監聽表單的提交事件，然後清空表單。
+
+	// tutorial16.js
+	var CommentForm = React.createClass({
+	  handleSubmit: function(e) {
+	    e.preventDefault();
+	    var author = this.refs.author.value.trim();
+	    var text = this.refs.text.value.trim();
+	    if (!text || !author) {
+	      return;
+	    }
+	    // TODO: send request to the server
+	    this.refs.author.value = '';
+	    this.refs.text.value = '';
+	    return;
+	  },
+	  render: function() {
+	    return (
+	      <form className="commentForm" onSubmit={this.handleSubmit}>
+	        <input type="text" placeholder="Your name" ref="author" />
+	        <input type="text" placeholder="Say something..." ref="text" />
+	        <input type="submit" value="Post" />
+	      </form>
+	    );
+	  }
+	});
+
+##### 事件
+React 使用駝峰式命名的方式給元件綁定事件處理器。我們給表單綁定一個`onSubmit`處理器，當表單提交了合法的輸入後，用於清空表單。
+
+在事件中調用`preventDefault()`來避免提交表單後瀏覽器的默認操作。
+
+##### Refs
+我們利用`ref`屬性給子元件命名，通過`this.refs`引用 DOM 節點。
+
+##### 用回呼函數作為屬性（props）
+當使用者提交評論的時候，我們需要刷新評論列表來加進這條新評論。在`CommentBox`中完成所有邏輯是最合適的，因為`CommentBox`擁有代表評論列表的狀態（state）。
+
+我們需要從子元件傳資料到它的父元件。我們在父元件的 render 方法中這樣做：傳遞一個新的回調函數（`handleCommentSubmit`）到子元件，綁定它到子元件的`onCommentSubmit`事件上。無論事件什麼時候觸發，回調函數都會被調用：
+
+	// tutorial17.js
+	var CommentBox = React.createClass({
+	  loadCommentsFromServer: function() {
+	    $.ajax({
+	      url: this.props.url,
+	      dataType: 'json',
+	      cache: false,
+	      success: function(data) {
+	        this.setState({data: data});
+	      }.bind(this),
+	      error: function(xhr, status, err) {
+	        console.error(this.props.url, status, err.toString());
+	      }.bind(this)
+	    });
+	  },
+	  handleCommentSubmit: function(comment) {
+	    // TODO: submit to the server and refresh the list
+	  },
+	  getInitialState: function() {
+	    return {data: []};
+	  },
+	  componentDidMount: function() {
+	    this.loadCommentsFromServer();
+	    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+	  },
+	  render: function() {
+	    return (
+	      <div className="commentBox">
+	        <h1>Comments</h1>
+	        <CommentList data={this.state.data} />
+	        <CommentForm onCommentSubmit={this.handleCommentSubmit} />
+	      </div>
+	    );
+	  }
+	});
+
+當用戶提交表單的時候，在`CommentForm`中調用這個回調函數：
+
+	// tutorial18.js
+	var CommentForm = React.createClass({
+	  handleSubmit: function(e) {
+	    e.preventDefault();
+	    var author = this.refs.author.value.trim();
+	    var text = this.refs.text.value.trim();
+	    if (!text || !author) {
+	      return;
+	    }
+	    this.props.onCommentSubmit({author: author, text: text});
+	    this.refs.author.value = '';
+	    this.refs.text.value = '';
+	    return;
+	  },
+	  render: function() {
+	    return (
+	      <form className="commentForm" onSubmit={this.handleSubmit}>
+	        <input type="text" placeholder="Your name" ref="author" />
+	        <input type="text" placeholder="Say something..." ref="text" />
+	        <input type="submit" value="Post" />
+	      </form>
+	    );
+	  }
+	});
+
+現在回調函數已經就緒，我們唯一需要做的就是提交到伺服器，然後刷新評論列表：
+
+	// tutorial19.js
+	var CommentBox = React.createClass({
+	  loadCommentsFromServer: function() {
+	    $.ajax({
+	      url: this.props.url,
+	      dataType: 'json',
+	      cache: false,
+	      success: function(data) {
+	        this.setState({data: data});
+	      }.bind(this),
+	      error: function(xhr, status, err) {
+	        console.error(this.props.url, status, err.toString());
+	      }.bind(this)
+	    });
+	  },
+	  handleCommentSubmit: function(comment) {
+	    $.ajax({
+	      url: this.props.url,
+	      dataType: 'json',
+	      type: 'POST',
+	      data: comment,
+	      success: function(data) {
+	        this.setState({data: data});
+	      }.bind(this),
+	      error: function(xhr, status, err) {
+	        console.error(this.props.url, status, err.toString());
+	      }.bind(this)
+	    });
+	  },
+	  getInitialState: function() {
+	    return {data: []};
+	  },
+	  componentDidMount: function() {
+	    this.loadCommentsFromServer();
+	    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+	  },
+	  render: function() {
+	    return (
+	      <div className="commentBox">
+	        <h1>Comments</h1>
+	        <CommentList data={this.state.data} />
+	        <CommentForm onCommentSubmit={this.handleCommentSubmit} />
+	      </div>
+	    );
+	  }
+	});
+
+### 優化：提前更新
+我們的應用程式現在已經完成了所有功能，但是在新的評論出現在列表之前，必須等待請求完成，感覺很慢。我們可以提前添加這條評論到列表中，從而使之感覺更快。
+
+	// tutorial20.js
+	var CommentBox = React.createClass({
+	  loadCommentsFromServer: function() {
+	    $.ajax({
+	      url: this.props.url,
+	      dataType: 'json',
+	      cache: false,
+	      success: function(data) {
+	        this.setState({data: data});
+	      }.bind(this),
+	      error: function(xhr, status, err) {
+	        console.error(this.props.url, status, err.toString());
+	      }.bind(this)
+	    });
+	  },
+	  handleCommentSubmit: function(comment) {
+	    var comments = this.state.data;
+	    var newComments = comments.concat([comment]);
+	    this.setState({data: newComments});
+	    $.ajax({
+	      url: this.props.url,
+	      dataType: 'json',
+	      type: 'POST',
+	      data: comment,
+	      success: function(data) {
+	        this.setState({data: data});
+	      }.bind(this),
+	      error: function(xhr, status, err) {
+	        console.error(this.props.url, status, err.toString());
+	      }.bind(this)
+	    });
+	  },
+	  getInitialState: function() {
+	    return {data: []};
+	  },
+	  componentDidMount: function() {
+	    this.loadCommentsFromServer();
+	    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+	  },
+	  render: function() {
+	    return (
+	      <div className="commentBox">
+	        <h1>Comments</h1>
+	        <CommentList data={this.state.data} />
+	        <CommentForm onCommentSubmit={this.handleCommentSubmit} />
+	      </div>
+	    );
+	  }
+	});
+
+
+剛剛通過一些簡單步驟構造了一個評論框。了解更多關於[為什麼使用 React](https://facebook.github.io/react/docs/why-react.html) 的內容，或者深入學習 [API 文件](https://facebook.github.io/react/docs/top-level-api.html)。
+
+---
+# Thinking in React
+by Pete Hunt
+
+React is, in my opinion, the premier way to build big, fast Web apps with JavaScript. It has scaled very well for us at Facebook and Instagram.
+
+One of the many great parts of React is how it makes you think about apps as you build them. In this post, I'll walk you through the thought process of building a searchable product data table using React.
+
+## 從原型(mock)開始
+## 第一步：拆分用戶界面為一個組件樹
+## 第二步： 利用React ，創建應用的一個靜態版本
+### 穿插一小段內容： props 與state 比較
+## 第三步：識別出最小的（但是完整的）代表UI 的state
+## 第四步：確認state 的生命週期
+## 第五步：添加反向數據流
+
+
+
+
+
