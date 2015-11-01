@@ -747,7 +747,48 @@ React is, in my opinion, the premier way to build big, fast Web apps with JavaSc
 One of the many great parts of React is how it makes you think about apps as you build them. In this post, I'll walk you through the thought process of building a searchable product data table using React.
 
 ## 從原型(mock)開始
-## 第一步：拆分用戶界面為一個組件樹
+假設我們已經擁有了一個 JSON API 和設計師設計的原型。原型看起來如下：
+![mock](image/mock.png)
+
+JSON API 返回資料如下：
+
+	[
+	  {category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"},
+	  {category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball"},
+	  {category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball"},
+	  {category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch"},
+	  {category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5"},
+	  {category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7"}
+	];
+
+## 第一步：拆分 UI 到元件階層
+要做的第一件事是，為所有元件（及子元件）命名並畫上線框圖。假如你和設計師一起工作，也許他們已經完成了這項工作，所以趕緊去跟他們討論！他們的 Photoshop 圖層名也許最終可以直接用於你的 React 元件命名。
+
+然而你如何知道哪些才能成為元件？當你創建一些函數或對象時，用到一些類似的技術。其中一項技術就是單一功能原則，指的是，理想狀態下一個元件應該只做一件事，假如它功能逐漸變大就需要被拆分成更小的子元件。
+
+由於你經常需要將一個 JSON 資料模型展示給用戶，你將會發現一旦模型結構正確建立，你的
+ UI (和你的元件結構)也會正確的映射。這是因為 UI 和資料模型往往跟信息構造一致，這意味著將你可以省下很多將UI分割成組件的麻煩事。你需要做的僅僅只是將數據模型分隔成一小塊一小塊的組件，以便它們都能夠表示成元件。
+
+![step 1](image/step1.png)
+
+由此可見，我們的app 中包含五個組件。下面我已經用斜體標示出每個組件對應的數據。
+
+1. `FilterableProductTable`**（橘色）**：包含整個例子的容器  
+2. `SearchBar`**（藍色）**：接受所有用戶輸入*（user input）*
+3. `ProductTable`**（綠色）**：根據用戶輸入*（user input）*過濾和顯示資料集合*（data collection）*
+6. `ProductCategoryRow`**（青色）**：為每個分類*（category）*展示一列表頭
+5. `ProductRow`**（紅色）**：為每個產品*（product）*展示一列
+
+如果你仔細觀察`ProductTable`，你會發現表頭（包含 “Name” 和 “Price” 標籤）並不是單獨的元件。這只是一種個人偏好，也有一定的爭論。在這個例子當中，我把表頭當做`ProductTable`的一部分，因為它是渲染*數據集合(data collection)*的一份子，這也是`ProductTable`的職責。但是，當這個表頭變得複雜起來的時候（例如，添加排序功能），就應該單獨地寫一個`ProductTableHeader`元件。
+
+既然我們在原型當中定義了這個元件，讓我們把這些元素組成一棵樹形結構。這很簡單。被包含在其它組件中的組件在屬性機構中應該是子級：
+
+* `FilterableProductTable`
+	* `SearchBar`
+	* `ProductTable`
+		* `ProductCategoryRow`
+		* `ProductRow`
+
 ## 第二步： 利用React ，創建應用的一個靜態版本
 ### 穿插一小段內容： props 與state 比較
 ## 第三步：識別出最小的（但是完整的）代表UI 的state
