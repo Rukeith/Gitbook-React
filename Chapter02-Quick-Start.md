@@ -789,13 +789,83 @@ JSON API 返回資料如下：
 		* `ProductCategoryRow`
 		* `ProductRow`
 
-## 第二步： 利用React ，創建應用的一個靜態版本
+## 第二步：利用 React，創建應用的一個靜態版本
+[JSFiddle 範例](https://jsfiddle.net/reactjs/yun1vgqb/light/)
+
+既然現在已經有了你的元件階層圖，就可以開始實作 app 了。最簡單的方式就是建立一版雖然有你的資料模型和渲染到 UI，但是沒有互動功能。拆分這兩個過程是最好的方式，因為構建一個靜態的版本僅需要大量的編寫，但不需要思考；但是添加互動功能卻需要大量的思考和少量的編寫。我們將會知道這是為什麼。
+
+為了創建一個渲染資料模型的應用的靜態版本，你會想要建立一些可重複使用在其它元件，並且透過`props`傳遞資料。`props`是一種從父級向子級傳遞資料的方式。如果你對`state`概念熟悉，那麼**不要使用`state`**來建造這個靜態版本。`State`僅用於實現互動功能，也就是說，資料會隨著時間變化。因為這是一個靜態的應用版本，所以你並不需要`state`。
+
+你可以從上至下或者從下至上來建立。也就是說，你可以從元件階層的頂部開始建立這些元件（例如，從`FilterableProductTable`開始），或者從底部開始（`ProductRow`）。在簡單的應用中，通常情況下從上至下的方式更加簡單；在大型的專案中，從下至上的方式更加簡單，這樣也可以在構建的同時寫測試代碼。
+
+在這步驟結束的時候，將會有一個可重複使用的元件 library 來渲染資料模型。這些元件將會只有`render()`方法，因為這是應用程式的一個靜態版本。位於階層頂部的元件（`FilterableProductTable`）將會使用資料模型作為`prop`。如果你改變底層資料模型，然後再次調用`React.render()`，UI 將會更新。查看 UI 如何被更新和什麼地方改變都是很容易的，因為 React 的**單向資料流**（也被稱作“單向綁定”）使得一切模組化，很容易查錯，並且速度很快。
+
+如果你在此步驟中需要幫助，請查看 [React 文件](https://facebook.github.io/react/docs/getting-started.html)。
+
 ### 穿插一小段內容： props 與state 比較
-## 第三步：識別出最小的（但是完整的）代表UI 的state
-## 第四步：確認state 的生命週期
+在 React 中有兩種類型的資料“模型”：`props`和`state`。理解兩者的區別是很重要的；如果你不太確定兩者有什麼區別，請大致瀏覽一下[官方的 React 文件](https://facebook.github.io/react/docs/interactivity-and-dynamic-uis.html)。
+
+## 第三步：找出最小（但是完整的）代表的 UI state
+為了使 UI 可以互動，需要能夠觸發底層資料模型的變化。React 通過**state**使這變得簡單。
+
+為了正確打造應用程式，首先需要考慮應用程式所需要的最小可變 state 集合。此處關鍵點在於 DRY：Don't Repeat Yourself。找出滿足應用程式所需要的絕對最小代表 state 是有必要的，並且計算出其它強烈需要的東西。例如，如果建造一個 TODO 列表，僅保存一個 TODO 列表項目的陣列，而不需要保存另外一個儲存陣列長度的 state 變數。當想要渲染 TODO 列表項目總數的時候，簡單地取出TODO列表項目陣列的長度就可以了。
+
+思考範例中的所有資料片段，有：
+
+* 最初的 products 列表
+* 使用者可以輸入的搜索表單
+* 複選框的值
+* 過濾後的 products 列表
+
+讓我們分析每一項目，找出哪一個是 state。簡單地對每一項目提出三個問題：
+
+1. 是否是從父級通過`props`傳入的？如果是，可能不是 state 。
+2. 是否會隨著時間改變？如果不是，可能不是 state 。
+3. 能根據元件中其它 state 或者 props 計算出來嗎？如果是，就不是state 。
+
+初始的 products 列表通過 props 傳入，所以不是 state。搜索表單和復選框看起來像是state，因為它們隨著時間改變，也不能根據其它數據計算出來。最後，過濾的 products 列表不是 state，因為可以通過搜索表單和復選框的值從初始的 products 列表計算出來。
+
+所以最終，state 是：
+
+* 使用者可以輸入的搜索表單
+* 複選框的值
+
+## 第四步：找出 state 的生命週期
+[JSFiddle 範例](https://jsfiddle.net/reactjs/zafjbw1e/light/)
+
+OK，現在我們找出了應用程式的 state 的最小集合。接下來，需要找出哪個元件會改變或者說擁有這個 state。
+
+記住：React 中資料是沿著元件階層從上到下單向資料流動的。可能不會立刻明白哪個元件應該擁有哪些 state。**這對新手來說通常是最難理解和最具挑戰的**，因此跟隨以下步驟來弄清楚這點：
+
+對於應用程式中的每一個 state：
+
+* 找出每一個基於那個 state 渲染界面的元件。
+* 找出共同的祖先元件（在元件階層中，某個單一元件高於所的元件之上需要這個 state）。
+* 若不是共同的祖先元件，就是另外一個在元件階層中位於更高層級的元件應該擁有這個state。
+* 如果找不出擁有這個 state 的合適元件，創建一個新的元件來維護這個 state，然後添加到元件階層中，層級位於所有共同擁有者元件的上面。
+
+讓我們在應用程式中應用這個策略：
+
+* `ProductTable`需要基於 state 過濾產品列表，`SearchBar`需要顯示搜索表單和復選框狀態。
+* 共同祖先元件是`FilterableProductTable`。
+* 理論上，過濾表單和復選框值位於`FilterableProductTable`中是合適的。
+
+我們決定了 state 位於`FilterableProductTable`之中。首先，給`FilterableProductTable`添加`getInitialState()`方法，並返回`{filterText: '', inStockOnly: false}`來反映應用程式的初始 state。然後傳遞`filterText`和`inStockOnly`給`ProductTable`和`SearchBar`作為 prop 。最後，使用這些 props 來過濾`ProductTable`中的行，設置在`SearchBar`中表單欄位的值。
+
+你可以開始觀察應用程式將會如何運行：設置`filterText`為`"ball"`，然後刷新應用。將會看到表格被正確更新了。
+
 ## 第五步：添加反向數據流
+[JSFiddle 範例](https://jsfiddle.net/reactjs/n47gckhr/light/)
 
+到目前為止，已經建立了基於 props 和 state 沿著階層圖從上至下單向數據流動正確渲染的應用程式。現在，是時候支援另外一種資料流動方式了：元件階層圖中層級很深的表單元件需要更新`FilterableProductTable`中的 state。
 
+React 讓這種資料流動非常明確，從而很容易理解應用程式是如何工作的，但是相對於傳統的雙向綁定，確實需要輸入更多的東西。React 提供了一個叫做`ReactLink`的插件來使其和雙向綁定一樣方便，但是考慮到這篇文章的目的，我們將會盡量把所有東西都直截了當。
+
+如果你嘗試在當前版本的範例中輸入或者點擊復選框，將會發現 React 會忽略你的輸入。這是有意的，因為已經設置了`input`的`value`屬性，使其總是與從`FilterableProductTable`傳遞過來的`state`一致。
+
+讓我們思考下我們希望發生什麼。我們想確保無論使用者何時改變了表單，都要更新 state 來反映使用者的輸入。由於元件只能更新自己的 state，`FilterableProductTable`將會傳遞一個回調函數給`SearchBar`，此函數將會在 state 應該被改變的時候觸發。我們可以使用 input 的`onChange`事件來監聽用戶輸入，從而確定何時觸發回調函數。`FilterableProductTable`傳遞的回調函數將會調用`setState()`，然後應用程式將會被更新。
+
+雖然這聽起來有很多內容，但是實際上僅僅需要幾行代碼。並且關於數據在應用中如何流動真的非常清晰明確。
 
 
 
