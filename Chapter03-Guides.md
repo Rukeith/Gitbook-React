@@ -335,32 +335,106 @@ JSX 與 HTML 非常相似，但是有些主要的不同點要注意。
 HTML 實體可以插入到 JSX 的文本中：  
 `<div>First &middot; Second</div>`
 
-如果想在 JSX 表达式中显示 HTML 实体，可以会遇到二次转义的问题，因为 React 默认会转义所有字符串，为了防止各种 XSS 攻击。
+如果想要在 JSX 中顯示 HTML 實體，可能會遇到二次轉譯的問題。因為 React 為了防止各種 XSS 攻擊，預設會轉譯所以字符串。
 
-// 错误: 会显示 “First &middot; Second”
-<div>{'First &middot; Second'}</div>
-有多种绕过的方法。最简单的是直接用 Unicode 字符。这时要确保文件是 UTF-8 编码且网页也指定为 UTF-8 编码。
+	// Bad: It displays "First &middot; Second"
+	<div>{'First &middot; Second'}</div>
 
-<div>{'First · Second'}</div>
-安全的做法是先找到 实体的 Unicode 编号 ，然后在 JavaScript 字符串里使用。
+有很多種避開這些問題的方法，最簡單的就是直接在 JavaScript 使用 Unicode。但需要確保檔案是 UTF-8 編碼而且瀏覽器也指定使用 UTF-8 編碼。
 
-<div>{'First \u00b7 Second'}</div>
-<div>{'First ' + String.fromCharCode(183) + ' Second'}</div>
-可以在数组里混合使用字符串和 JSX 元素。
+	<div>{'First · Second'}</div>
 
-<div>{['First ', <span>&middot;</span>, ' Second']}</div>
-万不得已，可以直接使用原始 HTML。
+更安全的做法是找到[實體的 Unicode 編碼](http://www.fileformat.info/info/unicode/char/b7/index.htm)，然後在 JavaScript 字符串裡使用。
 
-<div dangerouslySetInnerHTML={{__html: 'First &middot; Second'}} />
+	<div>{'First \u00b7 Second'}</div>
+	<div>{'First ' + String.fromCharCode(183) + ' Second'}</div>
+
+可以在陣列裡混合使用字符串和 JSX 元素。
+
+	<div>{['First ', <span>&middot;</span>, ' Second']}</div>
+
+萬不得已，可以使用[原始的 HTML](https://facebook.github.io/react/tips/dangerously-set-inner-html.html)。
+
+	<div dangerouslySetInnerHTML={{__html: 'First &middot; Second'}} />
+
 ## 自定義 HTML 屬性
-如果往原生 HTML 元素里传入 HTML 规范里不存在的属性，React 不会显示它们。如果需要使用自定义属性，要加 data- 前缀。
+如果向原生 HTML 元素傳遞不屬於 HTML 規範內的屬性，React 不會渲染它們。如果想要使用自定義的屬性，則需要加上前綴詞`data-`。
 
-<div data-custom-attribute="foo" />
-以 aria- 开头的 [网络无障碍] 属性可以正常使用。
+	<div data-custom-attribute="foo" />
 
-<div aria-hidden={true} />
+以 `aria-` 開頭的 [Web Accessibility](http://www.w3.org/WAI/intro/aria) 屬性可以正常使用。
+
+	<div aria-hidden={true} />
 
 # Interactivity and Dynamic UIs
+我們已經[學會如何使用 React 呈現數據](https://facebook.github.io/react/docs/displaying-data.html)。現在讓我們來學習如何建立互動的 UIs。
+
+## 簡單例子
+	var LikeButton = React.createClass({
+	  getInitialState: function() {
+	    return {liked: false};
+	  },
+	  handleClick: function(event) {
+	    this.setState({liked: !this.state.liked});
+	  },
+	  render: function() {
+	    var text = this.state.liked ? 'like' : 'haven\'t liked';
+	    return (
+	      <p onClick={this.handleClick}>
+	        You {text} this. Click to toggle.
+	      </p>
+	    );
+	  }
+	});
+	
+	ReactDOM.render(
+	  <LikeButton />,
+	  document.getElementById('example')
+	);
+
+## 事件處理與合成事件（Synthetic Events）
+React 裡只需把事件處理器（event handler）以駱峰式命名（camelCased）當作元件的 props 傳入即可，就像使用普通 HTML 那樣。React 內部創建一套合成事件系統來使所有事件在 IE8 和以上瀏覽器表現一致。也就是說，React 知道如何找出和捕獲事件，而且你的事件處理器接收到的 events 參數與 [W3C 規範](http://www.w3.org/TR/DOM-Level-3-Events/)一致，無論你使用哪種瀏覽器。
+
+如果需要在手機或平板等觸控設備上使用 React，需要調用`React.initializeTouchEvents(true);`啟用觸控事件處理。
+
+## 幕後原理：自動綁定和事件代理
+在幕後，React 做了一些操作來讓程式碼高效​​運行且易於理解。
+
+**Autobinding：**在 JavaScript 裡創建回調的時候，為了保證this的正確性，一般都需要顯式地綁定方法到它的實例上。有了React，所有方法被自動綁定到了它的組件實例上。React還緩存這些綁定方法，所以CPU和內存都是非常高效。而且還能減少打字！
+
+**Event Delegation：** React實際並沒有把事件處理器綁定到節點本身。當React啟動的時候，它在最外層使用唯一一個事件監聽器處理所有事件。當組件被加載和卸載時，只是在內部映射裡添加或刪除事件處理器。當事件觸發，React根據映射來決定如何分發。當映射里處理器時，會當作空操作處理。參考David Walsh很棒的文章了解這樣做高效的原因。
+
+組件其實是狀態機（State Machines）
+React 把用戶界面當作簡單狀態機。把用戶界面想像成擁有不同狀態然後渲染這些狀態，可以輕鬆讓用戶界面和數據保持一致。
+
+React 裡，只需更新組件的state，然後根據新的state 重新渲染用戶界面（不要操作DOM）。React 來決定如何最高效地更新DOM。
+
+State 工作原理
+常用的通知React數據變化的方法是調用setState(data, callback)。這個方法會合併（merge）data到this.state，並重新渲染組件。渲染完成後，調用可選的callback回調。大部分情況下不需要提供callback，因為React會負責把界面更新到最新狀態。
+
+哪些組件應該有State？
+大部分組件的工作應該是從props裡取數據並渲染出來。但是，有時需要對用戶輸入、服務器請求或者時間變化等作出響應，這時才需要使用State。
+
+** 嘗試把盡可能多的組件無狀態化。** 這樣做能隔離state，把它放到最合理的地方，也能減少冗餘，同時易於解釋程序運作過程。
+
+常用的模式是創建多個只負責渲染數據的無狀態（stateless）組件，在它們的上層創建一個有狀態（stateful）組件並把它的狀態通過props傳給子級。這個有狀態的組件封裝了所有用戶的交互邏輯，而這些無狀態組件則負責聲明式地渲染數據。
+
+哪些應該作為State？
+State應該包括那些可能被組件的事件處理器改變並觸髮用戶界面更新的數據。真實的應用中這種數據一般都很小且能被JSON序列化。當創建一個狀態化的組件時，想像一下表示它的狀態最少需要哪些數據，並只把這些數據存入this.state。在render()裡再根據state來計算你需要的其它數據。你會發現以這種方式思考和開發程序最終往往是正確的，因為如果在state裡添加冗餘數據或計算所得數據，需要你經常手動保持數據同步，不能讓React來幫你處理。
+
+哪些不應該作為State？
+this.state應該僅包括能表示用戶界面狀態所需的最少數據。因此，它不應該包括：
+
+計算所得數據：不要擔心根據state來預先計算數據——把所有的計算都放到render()裡更容易保證用戶界面和數據的一致性。例如，在state裡有一個數組（listItems），我們要把數組長度渲染成字符串，直接在render()裡使用this.state.listItems.length + ' list items'比把它放到state裡好的多。
+React組件：在render()裡使用當前props和state來創建它。
+基於props的重複數據：盡可能使用props來作為惟一數據來源。把props保存到state的一個有效的場景是需要知道它以前值的時候，因為未來的props可能會變化。
+
+
+
+
+
+
+
 # Multiple Components
 # Reusable Components
 # Transferring Props
