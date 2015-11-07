@@ -110,8 +110,8 @@ To install React DOM and build your bundle after installing browserify:
 同時也包含一些簡潔的特性：
 
 * **發布評論的體驗優化：**評論在儲存到服務器之前就會​​顯示在評論列表，因此感覺起來很快。
-* **實時更新：**其他用戶的評論將會即時的顯示在評論框中。
-* **Markdown格式：**用戶可以使用 Markdown 語法來編輯評論。
+* **實時更新：**其他使用者的評論將會即時的顯示在評論框中。
+* **Markdown格式：**使用者可以使用 Markdown 語法來編輯評論。
 
 ### 想要跳過後續所有的內容，只看原始碼？
 [所有代碼都在GitHub。](https://github.com/reactjs/react-tutorial)
@@ -198,7 +198,7 @@ React 中全是模塊化、可組裝的元件。以我們的評論框為例子�
 JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起來更容易。更多內容請閱讀 [JSX 語法文章](https://facebook.github.io/react/docs/jsx-in-depth.html)。
 
 #### 發生了什麼事
-我們通過 JavaScript 物件傳遞一些方法到`React.createClass()`來創建一個新的React 元件。其中最重要的方法是`render`，該方法回傳一顆 React 元件樹，這棵樹最終將會渲染到 HTML。
+我們套過 JavaScript 物件傳遞一些方法到`React.createClass()`來創建一個新的React 元件。其中最重要的方法是`render`，該方法回傳一顆 React 元件樹，這棵樹最終將會渲染到 HTML。
 
 這裡的`<div>`標籤不是真正的 DOM 節點；他們是 React `div`元件的實作。你可以當作這些標籤就是一些標記或者資料，React 知道如何處理它們。React 是**安全的**。我們不生成 HTML 字符串，因此預設阻止了 XSS 攻擊。
 
@@ -209,7 +209,7 @@ JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起�
 `ReactDOM`模塊提供了一些 DOM 相關的方法，而`React`包含了 React 團隊分享的不同平台上的核心工具（例如，[React Native](http://facebook.github.io/react-native/)）。
 
 ## 建構元件
-讓我們為`CommentList`和`CommentForm`建立骨架，它們也是由一些簡單的`<div>`組成。將這兩個組件的程式碼添加到你的原始碼中，保留已有的`CommentBox`聲明和`ReactDOM.render`調用：
+讓我們為`CommentList`和`CommentForm`建立骨架，它們也是由一些簡單的`<div>`組成。將這兩個元件的程式碼添加到你的原始碼中，保留已有的`CommentBox`聲明和`ReactDOM.render`調用：
 
 	// tutorial2.js
 	var CommentList = React.createClass({
@@ -266,7 +266,7 @@ JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起�
 	  }
 	});
 
-在 JSX 中，通過使用大括號包住一個 JavaScript 表達式（例如作為屬性或者子節點），你可以在樹結構中生成文本或者 React 元件。我們通過`this.props`來存取傳入元件的資料，鍵名就是對應的命名屬性，也可以通過`this.props.children`訪問元件內嵌的任何元素。
+在 JSX 中，套過使用大括號包住一個 JavaScript 表達式（例如作為屬性或者子節點），你可以在樹結構中生成文本或者 React 元件。我們套過`this.props`來存取傳入元件的資料，鍵名就是對應的命名屬性，也可以套過`this.props.children`訪問元件內嵌的任何元素。
 
 ### 元件屬性
 現在我們定義了`Comment`元件，我們想傳遞給它作者名稱和評論，以便於我們能夠對每一個獨立的評論重用使用相同的程式碼。首先讓我們添加一些評論到`CommentList`：
@@ -283,7 +283,7 @@ JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起�
 	  }
 	});
 
-請注意，我們從父`CommentList`元件傳遞給子`Comment`元件一些資料。例如，我們傳遞了*Pete Hunt*（透過屬性）和`This is one comment`（通過類似於XML的子節點）給第一個`Comment`元件。正如前面說的那樣，`Comment`元件通過`this.props.author`和`this.props.children`來訪問這些“屬性”。
+請注意，我們從父`CommentList`元件傳遞給子`Comment`元件一些資料。例如，我們傳遞了*Pete Hunt*（透過屬性）和`This is one comment`（套過類似於XML的子節點）給第一個`Comment`元件。正如前面說的那樣，`Comment`元件套過`this.props.author`和`this.props.children`來訪問這些“屬性”。
 
 ### 添加 Markdown 的格式
 Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號包裹文本將會使其強調突出。
@@ -355,7 +355,7 @@ Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號�
 	  {author: "Jordan Walke", text: "This is *another* comment"}
 	];
 
-我們需要用一種模組化的方式將數據傳入到`CommentList`。修改`CommentBox`和`React.render()`方法，通過`props`傳遞數據到`CommentList`：
+我們需要用一種模組化的方式將數據傳入到`CommentList`。修改`CommentBox`和`React.render()`方法，套過`props`傳遞數據到`CommentList`：
 
 	// tutorial9.js
 	var CommentBox = React.createClass({
@@ -409,11 +409,11 @@ Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號�
 >**Note：**到此步驟，程式還沒辦法運作
 
 ### 響應狀態變化(Reactive state)
-到目前為止，每一個元件都根據自己的`props`渲染了自己一次。`props`是不可變的：它們從父元件傳遞過來，“屬於”父元件。為了實現互動，我們給元件引入了可變的 **state**。`this.state`是元件私有的，可以通過調用`this.setState()`來改變它。當 state 更新之後，元件就會重新渲染自己。
+到目前為止，每一個元件都根據自己的`props`渲染了自己一次。`props`是不可變的：它們從父元件傳遞過來，“屬於”父元件。為了實現互動，我們給元件引入了可變的 **state**。`this.state`是元件私有的，可以套過調用`this.setState()`來改變它。當 state 更新之後，元件就會重新渲染自己。
 
 `render()`方法依賴於`this.props`和`this.state`，框架會確保渲染出來的 UI 界面總是與輸入（`this.props`和`this.state`）保持一致。
 
-當伺服器拿到評論資料的時候，將會改變我們有的評論資料。讓我們給`CommentBox`組件添加一個評論陣列作為它的`state`：
+當伺服器拿到評論資料的時候，將會改變我們有的評論資料。讓我們給`CommentBox`元件添加一個評論陣列作為它的`state`：
 
 	// tutorial12.js
 	var CommentBox = React.createClass({
@@ -515,7 +515,7 @@ Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號�
 這裡，我們只需把 AJAX 移到另一個個別的方法中，在元件第一次載入的時候，以及之後每隔兩秒鐘都會呼叫這個方法。嘗試在你的瀏覽器中運行程式，然後改變`comments.json`文件(在server源碼文件夾中)；在兩秒鐘之內，改動將會顯示出來！
 
 ### 新增評論
-現在可以開始構造表單了。我們的`CommentForm`元件應該詢問用戶的名字和評論內容，然後發送一個請求到服務器，保存這條評論。
+現在可以開始構造表單了。我們的`CommentForm`元件應該詢問使用者的名字和評論內容，然後發送一個請求到服務器，保存這條評論。
 
 	// tutorial15.js
 	var CommentForm = React.createClass({
@@ -530,7 +530,7 @@ Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號�
 	  }
 	});
 
-讓我們使表單可互動。當用戶提交表單的時候，我們應該清空表單，發送一個請求到服務器，然後刷新評論列表。首先，讓我們監聽表單的提交事件，然後清空表單。
+讓我們使表單可互動。當使用者提交表單的時候，我們應該清空表單，發送一個請求到服務器，然後刷新評論列表。首先，讓我們監聽表單的提交事件，然後清空表單。
 
 	// tutorial16.js
 	var CommentForm = React.createClass({
@@ -563,7 +563,7 @@ React 使用駝峰式命名的方式給元件綁定事件處理器。我們給�
 在事件中調用`preventDefault()`來避免提交表單後瀏覽器的默認操作。
 
 ##### Refs
-我們利用`ref`屬性給子元件命名，通過`this.refs`引用 DOM 節點。
+我們利用`ref`屬性給子元件命名，套過`this.refs`引用 DOM 節點。
 
 ##### 用回呼函數作為屬性（props）
 當使用者提交評論的時候，我們需要刷新評論列表來加進這條新評論。在`CommentBox`中完成所有邏輯是最合適的，因為`CommentBox`擁有代表評論列表的狀態（state）。
@@ -606,7 +606,7 @@ React 使用駝峰式命名的方式給元件綁定事件處理器。我們給�
 	  }
 	});
 
-當用戶提交表單的時候，在`CommentForm`中調用這個回調函數：
+當使用者提交表單的時候，在`CommentForm`中調用這個回調函數：
 
 	// tutorial18.js
 	var CommentForm = React.createClass({
@@ -736,7 +736,7 @@ React 使用駝峰式命名的方式給元件綁定事件處理器。我們給�
 	});
 
 
-剛剛通過一些簡單步驟構造了一個評論框。了解更多關於[為什麼使用 React](https://facebook.github.io/react/docs/why-react.html) 的內容，或者深入學習 [API 文件](https://facebook.github.io/react/docs/top-level-api.html)。
+剛剛套過一些簡單步驟構造了一個評論框。了解更多關於[為什麼使用 React](https://facebook.github.io/react/docs/why-react.html) 的內容，或者深入學習 [API 文件](https://facebook.github.io/react/docs/top-level-api.html)。
 
 ---
 # Thinking in React
@@ -766,22 +766,22 @@ JSON API 返回資料如下：
 
 然而你如何知道哪些才能成為元件？當你創建一些函數或對象時，用到一些類似的技術。其中一項技術就是單一功能原則，指的是，理想狀態下一個元件應該只做一件事，假如它功能逐漸變大就需要被拆分成更小的子元件。
 
-由於你經常需要將一個 JSON 資料模型展示給用戶，你將會發現一旦模型結構正確建立，你的
- UI (和你的元件結構)也會正確的映射。這是因為 UI 和資料模型往往跟信息構造一致，這意味著將你可以省下很多將UI分割成組件的麻煩事。你需要做的僅僅只是將數據模型分隔成一小塊一小塊的組件，以便它們都能夠表示成元件。
+由於你經常需要將一個 JSON 資料模型展示給使用者，你將會發現一旦模型結構正確建立，你的
+ UI (和你的元件結構)也會正確的映射。這是因為 UI 和資料模型往往跟信息構造一致，這意味著將你可以省下很多將UI分割成元件的麻煩事。你需要做的僅僅只是將數據模型分隔成一小塊一小塊的元件，以便它們都能夠表示成元件。
 
 ![step 1](image/step1.png)
 
-由此可見，我們的app 中包含五個組件。下面我已經用斜體標示出每個組件對應的數據。
+由此可見，我們的app 中包含五個元件。下面我已經用斜體標示出每個元件對應的數據。
 
 1. `FilterableProductTable`**（橘色）**：包含整個例子的容器  
-2. `SearchBar`**（藍色）**：接受所有用戶輸入*（user input）*
-3. `ProductTable`**（綠色）**：根據用戶輸入*（user input）*過濾和顯示資料集合*（data collection）*
+2. `SearchBar`**（藍色）**：接受所有使用者輸入*（user input）*
+3. `ProductTable`**（綠色）**：根據使用者輸入*（user input）*過濾和顯示資料集合*（data collection）*
 6. `ProductCategoryRow`**（青色）**：為每個分類*（category）*展示一列表頭
 5. `ProductRow`**（紅色）**：為每個產品*（product）*展示一列
 
 如果你仔細觀察`ProductTable`，你會發現表頭（包含 “Name” 和 “Price” 標籤）並不是單獨的元件。這只是一種個人偏好，也有一定的爭論。在這個例子當中，我把表頭當做`ProductTable`的一部分，因為它是渲染*數據集合(data collection)*的一份子，這也是`ProductTable`的職責。但是，當這個表頭變得複雜起來的時候（例如，添加排序功能），就應該單獨地寫一個`ProductTableHeader`元件。
 
-既然我們在原型當中定義了這個元件，讓我們把這些元素組成一棵樹形結構。這很簡單。被包含在其它組件中的組件在屬性機構中應該是子級：
+既然我們在原型當中定義了這個元件，讓我們把這些元素組成一棵樹形結構。這很簡單。被包含在其它元件中的元件在屬性機構中應該是子級：
 
 * `FilterableProductTable`
 	* `SearchBar`
@@ -806,7 +806,7 @@ JSON API 返回資料如下：
 在 React 中有兩種類型的資料“模型”：`props`和`state`。理解兩者的區別是很重要的；如果你不太確定兩者有什麼區別，請大致瀏覽一下[官方的 React 文件](https://facebook.github.io/react/docs/interactivity-and-dynamic-uis.html)。
 
 ## 第三步：找出最小（但是完整的）代表的 UI state
-為了使 UI 可以互動，需要能夠觸發底層資料模型的變化。React 通過**state**使這變得簡單。
+為了使 UI 可以互動，需要能夠觸發底層資料模型的變化。React 套過**state**使這變得簡單。
 
 為了正確打造應用程式，首先需要考慮應用程式所需要的最小可變 state 集合。此處關鍵點在於 DRY：Don't Repeat Yourself。找出滿足應用程式所需要的絕對最小代表 state 是有必要的，並且計算出其它強烈需要的東西。例如，如果建造一個 TODO 列表，僅保存一個 TODO 列表項目的陣列，而不需要保存另外一個儲存陣列長度的 state 變數。當想要渲染 TODO 列表項目總數的時候，簡單地取出TODO列表項目陣列的長度就可以了。
 
@@ -819,11 +819,11 @@ JSON API 返回資料如下：
 
 讓我們分析每一項目，找出哪一個是 state。簡單地對每一項目提出三個問題：
 
-1. 是否是從父級通過`props`傳入的？如果是，可能不是 state 。
+1. 是否是從父級套過`props`傳入的？如果是，可能不是 state 。
 2. 是否會隨著時間改變？如果不是，可能不是 state 。
 3. 能根據元件中其它 state 或者 props 計算出來嗎？如果是，就不是state 。
 
-初始的 products 列表通過 props 傳入，所以不是 state。搜索表單和復選框看起來像是state，因為它們隨著時間改變，也不能根據其它數據計算出來。最後，過濾的 products 列表不是 state，因為可以通過搜索表單和復選框的值從初始的 products 列表計算出來。
+初始的 products 列表套過 props 傳入，所以不是 state。搜索表單和復選框看起來像是state，因為它們隨著時間改變，也不能根據其它數據計算出來。最後，過濾的 products 列表不是 state，因為可以套過搜索表單和復選框的值從初始的 products 列表計算出來。
 
 所以最終，state 是：
 
@@ -863,7 +863,7 @@ React 讓這種資料流動非常明確，從而很容易理解應用程式是�
 
 如果你嘗試在當前版本的範例中輸入或者點擊復選框，將會發現 React 會忽略你的輸入。這是有意的，因為已經設置了`input`的`value`屬性，使其總是與從`FilterableProductTable`傳遞過來的`state`一致。
 
-讓我們思考下我們希望發生什麼。我們想確保無論使用者何時改變了表單，都要更新 state 來反映使用者的輸入。由於元件只能更新自己的 state，`FilterableProductTable`將會傳遞一個回調函數給`SearchBar`，此函數將會在 state 應該被改變的時候觸發。我們可以使用 input 的`onChange`事件來監聽用戶輸入，從而確定何時觸發回調函數。`FilterableProductTable`傳遞的回調函數將會調用`setState()`，然後應用程式將會被更新。
+讓我們思考下我們希望發生什麼。我們想確保無論使用者何時改變了表單，都要更新 state 來反映使用者的輸入。由於元件只能更新自己的 state，`FilterableProductTable`將會傳遞一個回調函數給`SearchBar`，此函數將會在 state 應該被改變的時候觸發。我們可以使用 input 的`onChange`事件來監聽使用者輸入，從而確定何時觸發回調函數。`FilterableProductTable`傳遞的回調函數將會調用`setState()`，然後應用程式將會被更新。
 
 雖然這聽起來有很多內容，但是實際上僅僅需要幾行代碼。並且關於數據在應用中如何流動真的非常清晰明確。
 

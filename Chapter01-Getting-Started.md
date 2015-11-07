@@ -9,8 +9,8 @@ React 元件套過`render()`的方法，接受輸入的資料和回傳顯示。�
 	
 	React.render(<HelloMessage name="John" />, mountNode);
 
-## 一個有狀態的組件
-除了​​接受輸入數據（通過`this.props`），元件還可以保持內部狀態數據（通過`this.state`）。當一個元件的狀態資料變化，渲染的標記將被重新調用`render()`更新畫面。
+## 一個有狀態的元件
+除了​​接受輸入數據（透過`this.props`），元件還可以保持內部狀態數據（透過`this.state`）。當一個元件的狀態資料變化，渲染的標記將被重新調用`render()`更新畫面。
 
 	var Timer = React.createClass({
 	  getInitialState: function() {
@@ -74,7 +74,7 @@ React 元件套過`render()`的方法，接受輸入的資料和回傳顯示。�
 	
 	React.render(<TodoApp />, mountNode);
 
-## 一個使用外部插件的組件
+## 一個使用外部插件的元件
 React 是靈活的，並且提供 hooks 讓你跟其他 library 和 framework 串接。下面例子展現了一個案例，使用外部 Markdown library 實作即時轉換 textarea 的值。
 
 	var converter = new Showdown.converter();

@@ -9,8 +9,8 @@ React 是一個由 Facebook 和 Instagram 用來建立使用者界面的 JavaScr
 ## 聲明式(Declarative)
 當資料變化後，React 概念上與點擊“刷新”按鈕類似，但僅會更新變化的部分。
 
-## 構建可組合的組件
-React 都是關於建立可重複使用的元件。事實上，通過 React 你*唯一*要做的事情就是建立元件。由於其良好的封裝性，元件使代碼可重複使用、測試和關注分離（separation of concerns）更加簡單。
+## 構建可組合的元件
+React 都是關於建立可重複使用的元件。事實上，透過 React 你*唯一*要做的事情就是建立元件。由於其良好的封裝性，元件使代碼可重複使用、測試和關注分離（separation of concerns）更加簡單。
 
 ## 給它5分鐘的時間
 React 挑戰了很多傳統的知識，第一眼看上去可能很多想法有點瘋狂。當你閱讀這篇指南，請[給它5分鐘的時間](https://signalvnoise.com/posts/3124-give-it-five-minutes)；那些瘋狂的想法已經幫助 Facebook 和 Instagram 從裡到外建立了上千個元件了。
@@ -79,16 +79,16 @@ React 元件非常簡單。你可以把它們當作是簡單的函數，接受`p
 > **One limitation**：React 元件只能渲染單個根節點。如果你想要返回多個節點，它們必須被包含在同一個節點裡。
 
 ## JSX 語法
-我們始終堅信，元件應該要專注於分離，而不是通過“樣板引擎”和“顯示邏輯”。我們認為標籤和生成它的程式碼是緊密相連的。此外，顯示邏輯通常是很複雜的，通過樣板語言實現這些邏輯會變得笨重。
+我們始終堅信，元件應該要專注於分離，而不是透過“樣板引擎”和“顯示邏輯”。我們認為標籤和生成它的程式碼是緊密相連的。此外，顯示邏輯通常是很複雜的，透過樣板語言實現這些邏輯會變得笨重。
 
-我們得出解決這個問題最好的方案是通過 JavaScript 直接生成樣板，這樣你就可以用一個真正語言的所有表達能力去建立 UI。
+我們得出解決這個問題最好的方案是透過 JavaScript 直接生成樣板，這樣你就可以用一個真正語言的所有表達能力去建立 UI。
 
-為了使這變得更簡單，我們做了一個非常簡單、可選的類似 HTML 語法，通過函數即可生成樣板的編譯器，稱為 JSX。
+為了使這變得更簡單，我們做了一個非常簡單、可選的類似 HTML 語法，透過函數即可生成樣板的編譯器，稱為 JSX。
 
-**JSX 讓你可以用 HTML 的語法來寫 JavaScript 函數。**要在 React 生成一個連結，通過純的 JavaScript 你可以這麼寫：
+**JSX 讓你可以用 HTML 的語法來寫 JavaScript 函數。**要在 React 生成一個連結，透過純的 JavaScript 你可以這麼寫：
 `React.createElement('a', {href: 'http://facebook.github.io/react/'}, 'Hello React!')`
 
-通過 JSX 這就變成了：
+透過 JSX 這就變成了：
 `<a href="http://facebook.github.io/react/">Hello React!</a>`
 
 我們發現這會使建立 React 應用程式更加簡單，設計師也偏向使用這種語法，但是每個人都有自己的工作流，所以 **JSX 並不是強制要求使用的。**
@@ -107,7 +107,7 @@ JSX 類似於HTML，但不是完全一樣。參考 [JSX 陷阱](https://facebook
 	var root = React.createElement('ul', { className: 'my-list' }, child1, child2);
 	ReactDOM.render(root, document.getElementById('example'));
 
-方便起見，你可以創建基於自定義組件的速記工廠方法。
+方便起見，你可以創建基於自定義元件的速記工廠方法。
 
 	var Factory = React.createFactory(ComponentClass);
 	...
@@ -119,7 +119,7 @@ React 已經為 HTML 標籤提供內置工廠方法。
 	var root = React.DOM.ul({ className: 'my-list' },
 	             React.DOM.li(null, 'Text Content')
 	           );
-	           
+
 # 資料呈現 - JSX in Depth
 JSX 是一個看起來很像 XML 的 JavaScript 語法擴充。React 可以用來做簡單的 JSX 句法轉換。
 
@@ -252,7 +252,7 @@ JSX 將會在編譯程式碼時處理成正確的原生 JavaScript。
 	);
 
 ### 布林屬性
-如果屬性的值被省略掉了，JSX 會把它當作`true`。要通過`false`屬性表達式必須使用。這個最常用於 HTML 表單元素，配合屬性像是`disabled`,`required`,`checked`和`readOnly`。
+如果屬性的值被省略掉了，JSX 會把它當作`true`。要透過`false`屬性表達式必須使用。這個最常用於 HTML 表單元素，配合屬性像是`disabled`,`required`,`checked`和`readOnly`。
 
 	// These two are equivalent in JSX for disabling a button
 	<input type="button" disabled />;
@@ -400,42 +400,188 @@ React 裡只需把事件處理器（event handler）以駱峰式命名（camelCa
 ## 幕後原理：自動綁定和事件代理
 在幕後，React 做了一些操作來讓程式碼高效​​運行且易於理解。
 
-**Autobinding：**在 JavaScript 裡創建回調的時候，為了保證this的正確性，一般都需要顯式地綁定方法到它的實例上。有了React，所有方法被自動綁定到了它的組件實例上。React還緩存這些綁定方法，所以CPU和內存都是非常高效。而且還能減少打字！
+**Autobinding：**在 JavaScript 裡創建回調的時候，為了保證`this`的正確性，一般都需要明確地綁定方法到它的實例上。有了 React，所有方法被自動綁定到了它的元件實例上(使用 ES6 class 語法時除外)。React 還緩存這些綁定方法，所以 CPU 和內存都是非常高效。而且還能減少打字！
 
-**Event Delegation：** React實際並沒有把事件處理器綁定到節點本身。當React啟動的時候，它在最外層使用唯一一個事件監聽器處理所有事件。當組件被加載和卸載時，只是在內部映射裡添加或刪除事件處理器。當事件觸發，React根據映射來決定如何分發。當映射里處理器時，會當作空操作處理。參考David Walsh很棒的文章了解這樣做高效的原因。
+**Event Delegation：**React 實際並沒有把事件處理器綁定到節點本身。當 React 啟動的時候，它在最外層使用唯一一個事件監聽器處理所有事件。當元件被掛載和卸載時，只是在內部映射裡添加或刪除事件處理器。當事件觸發，React 會根據映射知道如何分發(dispatch)。當沒有事件處理器可以映射時，會當作空操作處理。參考 [David Walsh 很棒的文章](http://davidwalsh.name/event-delegate)了解這樣做高效率的原因。
 
-組件其實是狀態機（State Machines）
-React 把用戶界面當作簡單狀態機。把用戶界面想像成擁有不同狀態然後渲染這些狀態，可以輕鬆讓用戶界面和數據保持一致。
+## 元件其實是狀態機（State Machines）
+React 把 UIs 當作簡單狀態機。把 UI 想像成擁有不同狀態然後渲染這些狀態，可以輕鬆讓UI 和資料保持一致。
 
-React 裡，只需更新組件的state，然後根據新的state 重新渲染用戶界面（不要操作DOM）。React 來決定如何最高效地更新DOM。
+React 裡，只需更新元件的 state，然後根據新的 state 重新渲染 UI。React 來決定如何最高效率地更新 DOM。
 
-State 工作原理
-常用的通知React數據變化的方法是調用setState(data, callback)。這個方法會合併（merge）data到this.state，並重新渲染組件。渲染完成後，調用可選的callback回調。大部分情況下不需要提供callback，因為React會負責把界面更新到最新狀態。
+## State 工作原理
+一般用來通知 React 資料變更的方法是調用`setState(data, callback)`。這個方法會合併（merge）`data`到`this.state`，並重新渲染元件。當元件渲染完成後，會呼叫可選的`callback`。大部分情況下不需要提供`callback`，因為 React 會負責把 UI 更新到最新狀態。
 
-哪些組件應該有State？
-大部分組件的工作應該是從props裡取數據並渲染出來。但是，有時需要對用戶輸入、服務器請求或者時間變化等作出響應，這時才需要使用State。
+## 哪些元件應該有 State？
+大部分元件的工作應該是從`props`裡取資料並渲染出來。然而有時需要對使用者輸入、伺服器請求或者時間變化等作出回應，這時需要使用 state。
 
-** 嘗試把盡可能多的組件無狀態化。** 這樣做能隔離state，把它放到最合理的地方，也能減少冗餘，同時易於解釋程序運作過程。
+**試著盡可能的減少在元件使用 state。** 這樣做能隔離 state，把它放到最合理的地方，也能減少冗餘，同時也易於理解應用程式的運作過程。
 
-常用的模式是創建多個只負責渲染數據的無狀態（stateless）組件，在它們的上層創建一個有狀態（stateful）組件並把它的狀態通過props傳給子級。這個有狀態的組件封裝了所有用戶的交互邏輯，而這些無狀態組件則負責聲明式地渲染數據。
+常用的模式是建立多個只負責渲染資料的無狀態（stateless）元件，在它們的上層創建一個富有狀態（stateful）的元件並透過把它的 state 傳給子級元件的`props`。這個富有狀態的元間封裝了所有的互動邏輯，而這些無狀態元件則負責明確低地渲染資料。
 
-哪些應該作為State？
-State應該包括那些可能被組件的事件處理器改變並觸髮用戶界面更新的數據。真實的應用中這種數據一般都很小且能被JSON序列化。當創建一個狀態化的組件時，想像一下表示它的狀態最少需要哪些數據，並只把這些數據存入this.state。在render()裡再根據state來計算你需要的其它數據。你會發現以這種方式思考和開發程序最終往往是正確的，因為如果在state裡添加冗餘數據或計算所得數據，需要你經常手動保持數據同步，不能讓React來幫你處理。
+## 哪些應該在 State 做？
+**State 應該包括那些可能被元件的事件處理器改變並觸發 UI 更新的資料。**真實的應用程式中這種資料一般都很小且能被 JSON 序列化。當創建一個富有狀態的元件時，想像一下它的狀態最少需要哪些資料，並只把這些資料存到`this.state`。在`render()`裡再根據 state 來計算你需要的其它資訊。你會發現以這種方式思考和開發應用程式最終往往是正確的，因為如果在 state 裡添加多餘資料或計算資料，需要你經常手動保持資料同步，而不能讓 React 來幫你處理。
 
-哪些不應該作為State？
-this.state應該僅包括能表示用戶界面狀態所需的最少數據。因此，它不應該包括：
+## 哪些不應該在 State 做？
+`this.state`應該僅包括能表示 UI 的狀態所需的最少資料。因此，它不應該包括：
 
-計算所得數據：不要擔心根據state來預先計算數據——把所有的計算都放到render()裡更容易保證用戶界面和數據的一致性。例如，在state裡有一個數組（listItems），我們要把數組長度渲染成字符串，直接在render()裡使用this.state.listItems.length + ' list items'比把它放到state裡好的多。
-React組件：在render()裡使用當前props和state來創建它。
-基於props的重複數據：盡可能使用props來作為惟一數據來源。把props保存到state的一個有效的場景是需要知道它以前值的時候，因為未來的props可能會變化。
+* **計算所得資料：**不要擔心根據 state 來預先計算資料 —— 把所有的計算都放到`render()`裡更容易保證 UI 和資料的一致性。例如，在 state 裡有一個陣列，我們要把陣列長度渲染成字串，直接在`render()`裡使用`this.state.listItems.length + ' list items'`比把它儲存到 state 裡好的多。
+* **React 元件：**在`render()`裡使用當前 props 和 state 來創建它。
+* **基於 props 的重複數據：**盡可能使用 props 來作為唯一的資料來源。把 props 保存到 state 的一個有效的場景是需要知道它以前值的時候，因為 props 可能會因為父級元件重新渲染而變化。
 
+# 複合元件 (Multiple Components)
+截至目前為止，我們已經學會如何用單個元件來顯示資料和處理使用者輸入。下一步讓我們來體驗 React 最激動人心的特性之一：**可組合性（composability）**。
 
+## 動機：關注分離
+透過重複使用那些接口定義良好的元件來開發新的模組化元件，我們得到了與使用函數和 classes　相似的好處。具體來說就是能夠透過開發簡單的元件把程式的*不同關注面分離*。如果為程式開發一套自定義的元件庫，那麼就能以最適合業務場景的方式來展示你的 UI。
 
+## 組合實例
+一起來使用 Facebook Graph API 開發可以顯示個人圖片和使用者名的簡單 Avatar 元件吧。
 
+	var Avatar = React.createClass({
+		render: function () {
+			return (
+				<div>
+					<ProfilePic username={this.props.username} />
+					<ProfileLink username={this.props.username} />
+				</div>
+			);
+		}
+	});
+	
+	var ProfilePic = React.createClass({
+		render: function () {
+			return (
+				<img src={'https://graph.facebook.com/' + this.props.username + '/picture'} />
+			);
+		}
+	});
 
+	var ProfileLink = React.createClass({
+		render: function () {
+			return (
+				<a href={'https://www.facebook.com/' + this.props.username}>
+					{this.props.username}
+				</a>
+			);
+		}
+	});
+	
+	ReactDOM.render(
+		<Avatar username="pwh" />,
+		document.getElementById("example")
+	);
 
+## 從屬關係
+上面例子中，`Avatar`擁有`ProfilePic`和`ProfileLink`。在 React 中，**擁有者就是給其它元件設置`props`的那個元件。**更正式地說，如果元件`X`是在元件`Y`的`render()`方法中建立的，那麼`Y`就擁有`X`。如同之前講過，元件不能修改自身的`props` - 它們總是與它們擁有者設置的保持一致。這是保持 UIs 一致性的關鍵性原則。
 
-# Multiple Components
+畫出從屬關係與父子關係的區別相當的重要。從屬關係是 React 特有的，而父子關係簡單來講就是 DOM 裡的標籤的關係。在上一個例子中，`Avatar`擁有`div`、`ProfilePic`和`ProfileLink`，`div`是`ProfilePic`和`ProfileLink`的父級（但不是擁有者）。
+
+## 子級
+當建立 React 元件實例時，你可以在開始標籤和結束標籤之間引用 React 元件或者Javascript 表達式：
+
+	<Parent><Child /></Parent>
+
+`Parent`能透過專門的`this.props.children`屬性讀取子級。**`this.props.children`是一個不透明的資料結構：**使用 [React.Children 工具](https://facebook.github.io/react/docs/top-level-api.html#react.children)來操作。
+
+### 子級校正（Reconciliation）
+**校正就是每次 render 方法調用後 React 更新 DOM 的過程。**一般情況下，子級會根據它們被渲染的順序來做校正。例如，假定有兩個渲染過程生成以下相應的標記：
+
+	// Render Pass 1
+	<Card>
+	  <p>Paragraph 1</p>
+	  <p>Paragraph 2</p>
+	</Card>
+	// Render Pass 2
+	<Card>
+	  <p>Paragraph 2</p>
+	</Card>
+
+直觀來看，只是刪除了`<p>Paragraph 1</p>`。事實上，React 先更新第一個子級的內容，然後刪除最後一個元件。React 是根據子級的*順序*來校正的。
+
+### 子元件狀態管理
+對於大多數元件來說，這沒什麼大礙。但是，對於使用`this.state`在多次渲染過程中維持資料的富有狀態元件，這樣做潛在很多問題。
+
+多數情況下，可以透過隱藏元件來避開這些問題而不是刪除它們。
+
+	// Render Pass 1
+	<Card>
+	  <p>Paragraph 1</p>
+	  <p>Paragraph 2</p>
+	</Card>
+	// Render Pass 2
+	<Card>
+	  <p style={{display: 'none'}}>Paragraph 1</p>
+	  <p>Paragraph 2</p>
+	</Card>
+
+### 動態子級
+如果子元件位置會改變（如在搜索結果中）或者有新元件添加到列表開頭（如在串流中）情況會變得更加複雜。如果子級要在多個渲染過程中保持自己的特徵和狀態，在這種情況下，你可以透過給子級設置唯一的`key`值來區分。
+
+	render: function () {
+		var results = this.props.results;
+		return (
+			<ol>
+				{results.map(function(result){
+					return <li key={result.id}>{result.text}</li>;
+				})}
+			</ol>
+		);
+	}
+
+當 React 校正帶有`key`值的子級時，它會確保它們被重新排序（而不是破壞）或者刪除（而不是重用）。
+
+務必把`key`值直接添加到陣列中的元件身上，而不是陣列中每個元件內部最外層的 HTML 上：
+
+	// WRONG!
+	var ListItemWrapper = React.createClass({
+	  render: function() {
+	    return <li key={this.props.data.id}>{this.props.data.text}</li>;
+	  }
+	});
+	var MyComponent = React.createClass({
+	  render: function() {
+	    return (
+	      <ul>
+	        {this.props.results.map(function(result) {
+	          return <ListItemWrapper data={result}/>;
+	        })}
+	      </ul>
+	    );
+	  }
+	});
+
+	// Correct :)
+	var ListItemWrapper = React.createClass({
+	  render: function() {
+	    return <li>{this.props.data.text}</li>;
+	  }
+	});
+	var MyComponent = React.createClass({
+	  render: function() {
+	    return (
+	      <ul>
+	        {this.props.results.map(function(result) {
+	           return <ListItemWrapper key={result.id} data={result}/>;
+	        })}
+	      </ul>
+	    );
+	  }
+	});
+
+另外也可以傳遞 ReactFragment 物件來做為有`key`的子級。可以在 [Keyed Fragments](https://facebook.github.io/react/docs/create-fragment.html) 看到更多詳細資訊。
+
+## 資料流
+React 中，資料流透過上面介紹過的`props`從擁有者到所擁有的元件。這就是高效率的單向資料綁定(one-way data binding)：擁有者透過它的`props`或`state`計算出一些值，並把這些值綁定到它們所擁有元件的`props`上。因為這個過程遞迴般的發生，所以資料變化會自動的在所有被使用的地方反映出來。
+
+## A Note on Performance
+你或許會擔心如果一個擁有者有大量子級時，對於資料的變化做出響應會非常耗費性能。好消息是執行 JavaScript 非常的快，而且`render()`方法一般相當簡單，所以在大部分應用程式裡這樣做速度極快。此外，性能上的瓶頸大多是因為 DOM 更新，而非 JS 的執行。React 會透過批量更新和變化檢測來優化性能。
+
+然而有時候需要做細部的性能控制。這種情況下，可以重寫`shouldComponentUpdate()`方法返回`false`來讓 React 跳過對子級的處理。參考 [React reference docs](https://facebook.github.io/react/docs/component-specs.html)了解更多。
+
+> **注意：**  
+> 如果在資料變化時讓`shouldComponentUpdate()`返回`false`，React 就不能保證 UI 會同步。當使用它的時候一定確保你清楚到底做了什麼，並且只在遇到明顯性能問題的時候才使用它。不要低估 JavaScript 的速度，DOM 操作通常才是慢的原因。
+
 # Reusable Components
 # Transferring Props
 # Forms
