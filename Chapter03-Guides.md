@@ -603,46 +603,45 @@ React 中，資料流透過上面介紹過的`props`從擁有者到所擁有的�
 	    // (or fragment) containing these types.
 	    optionalNode: React.PropTypes.node,
 	
-	    // A React element.
+	    // React 元素
 	    optionalElement: React.PropTypes.element,
 	
-	    // You can also declare that a prop is an instance of a class. This uses
-	    // JS's instanceof operator.
+	    // 你也可以宣告這個 prop 是 class 的實例
+	    // 使用 JS 的 instanceof 操作符的實例
 	    optionalMessage: React.PropTypes.instanceOf(Message),
 	
-	    // You can ensure that your prop is limited to specific values by treating
-	    // it as an enum.
+	    // 可以把它當作 enum
+	    // 限制 prop 只接受指定的值
 	    optionalEnum: React.PropTypes.oneOf(['News', 'Photos']),
 	
-	    // An object that could be one of many types
+	    // 指定物件可以為多個類型中的一個
 	    optionalUnion: React.PropTypes.oneOfType([
 	      React.PropTypes.string,
 	      React.PropTypes.number,
 	      React.PropTypes.instanceOf(Message)
 	    ]),
 	
-	    // An array of a certain type
+	    // 由指定類型組成的陣列
 	    optionalArrayOf: React.PropTypes.arrayOf(React.PropTypes.number),
 	
-	    // An object with property values of a certain type
+	    // 物件有指定類型的屬性
 	    optionalObjectOf: React.PropTypes.objectOf(React.PropTypes.number),
 	
-	    // An object taking on a particular shape
+	    // 指定物件的參數
 	    optionalObjectWithShape: React.PropTypes.shape({
 	      color: React.PropTypes.string,
 	      fontSize: React.PropTypes.number
 	    }),
 	
-	    // You can chain any of the above with `isRequired` to make sure a warning
-	    // is shown if the prop isn't provided.
+	    // 可以在任何類型後面加上 `isRequired` 來使 prop 不可為空
+	    // 會給出警告訊息
 	    requiredFunc: React.PropTypes.func.isRequired,
 	
-	    // A value of any data type
+	    // 可以是任意類型，但是不可為空
 	    requiredAny: React.PropTypes.any.isRequired,
 	
-	    // You can also specify a custom validator. It should return an Error
-	    // object if the validation fails. Don't `console.warn` or throw, as this
-	    // won't work inside `oneOfType`.
+	    // 可以自定義驗證。如果驗證錯誤，要回傳 Error 物件
+	    // 不能使用`console.warn`或 throw，因為`oneOfType`會失效
 	    customProp: function(props, propName, componentName) {
 	      if (!/matchme/.test(props[propName])) {
 	        return new Error('Validation failed!');
@@ -652,97 +651,175 @@ React 中，資料流透過上面介紹過的`props`從擁有者到所擁有的�
 	  /* ... */
 	});
 
-默認Prop 值
-React支持以聲明式的方式來定義props的默認值。
+## 默認Prop 值
+React 支援以宣告的方式來定義`props`的預設值。
 
-var  ComponentWithDefaultProps  =  React . createClass ({ 
-  getDefaultProps :  function ()  { 
-    return  { 
-      value :  'default value' 
-    }; 
-  } 
-  /* ... */ 
-});
-當父級沒有傳入props時，getDefaultProps()可以保證 this.props.value有默認值，注意getDefaultProps的結果會被緩存。得益於此，你可以直接使用props，而不必寫手動編寫一些重複或無意義的代碼。
+	var ComponentWithDefaultProps = React.createClass({
+		getDefaultProps: function () {
+			return {
+				value: 'default value'
+			};
+		}
+		/* ... */
+	});
 
-傳遞Props：小技巧
-有一些常用的React組件只是對HTML做簡單擴展。通常，你想少寫點代碼來把傳入組件的props複製到對應的HTML元素上。這時JSX的spread語法會幫到你：
+當父級沒有傳入 props 時，`getDefaultProps()`可以保證`this.props.value`有默認值，注意`getDefaultProps()`的結果會被緩存。得益於此，你可以直接使用 props，而不必手動編寫一些重複或無意義的代碼。
 
-var  CheckLink  =  React . createClass ({ 
-  render :  function ()  { 
-    //這樣會把CheckList所有的props複製到<a> 
-    return  < a  {... this . props } > { '√ ' }{ this . props . children } < /a>; 
-  } 
-});
+## 傳遞 Props：小技巧
+有一些常用的 React 元件只是對 HTML 做簡單擴展。通常你會想少寫點程式碼來把傳入元件的 props 複製到對應的 HTML 元素上。這時 JSX 的 spread 語法會幫到你：
 
-React . render ( 
-  < CheckLink  href = "/checked.html" > 
-    Click  here ! 
-  < /CheckLink>, 
-  document . getElementById ( 'example' ) 
-);
-單個子級
-React.PropTypes.element可以限定只能有一個子級傳入。
+	var CheckLink = React.createClass({
+		render: function () {
+			// This takes any props passed to CheckLink and copies them to <a>
+			return <a {...this.props}>{'√ '}{this.props.children}</a>;
+		}
+	});
 
-var  MyComponent  =  React . createClass ({ 
-  propTypes :  { 
-    children :  React . PropTypes . element . isRequired 
-  },
+	ReactDOM.render(
+		<CheckLink href="/checked.html">
+			Click here!
+		</CheckLink>,
+		document.getElementById('example')
+	);
 
-  render :  function ()  { 
-    return  ( 
-      < div > 
-        { this . props . children }  //有且僅有一個元素，否則會拋異常。
-      < /div> 
-    ); 
-  }
+## 單個子級
+使用`React.PropTypes.element`可以限定只能有一個子級傳入。
 
-});
-Mixins
-組件是React裡復用代碼最佳方式，但是有時一些複雜的組件間也需要共用一些功能。有時會被稱為跨切面關注點。React使用mixins來解決這類問題。
+	var MyComponent = React.createClass({
+		propTypes: {
+			children: React.PropTypes.element.isRequired
+		},
+		render: function () {
+			return (
+				<div>
+					{this.props.children}
+					// 這必須是一個元素，否則將拋出錯誤訊息
+				</div>
+			);
+		}
+	});
 
-一個通用的場景是：一個組件需要定期更新。用setInterval()做很容易，但當不需要它的時候取消定時器來節省內存是非常重要的。React提供生命週期方法來告知組件創建或銷毀的時間。下面來做一個簡單的mixin，使用setInterval()並保證在組件銷毀時清理定時器。
+## Mixins
+元件是 React 裡重複使用程式碼的最佳方式，但是有時一些差異很大的元件間也需要共用一些功能。有時會被稱為 [cross-cutting concerns](http://www.wikiwand.com/en/Cross-cutting_concern)。React 提供`mixins`來解決這類問題。
 
-var  SetIntervalMixin  =  { 
-  componentWillMount :  function ()  { 
-    this . intervals  =  []; 
-  }, 
-  setInterval :  function ()  { 
-    this . intervals . push ( setInterval . apply ( null ,  arguments )); 
-  }, 
-  componentWillUnmount :  function ()  { 
-    this . intervals . map ( clearInterval ); 
-  } 
-};
+一個常用的場景是：一個元件需要定期更新。用`setInterval()`做很容易，但當不需要它的時候取消定時器來節省內存是非常重要的。React 提供 [lifecycle methods](https://facebook.github.io/react/docs/working-with-the-browser.html#component-lifecycle) 來告知元件創建或銷毀的時間。下面來做一個簡單的`mixin`，使用這些方法提供一個簡單的`setInterval()`，會在元件銷毀時自動清空。
 
-var  TickTock  =  React . createClass ({ 
-  mixins :  [ SetIntervalMixin ],  //引用mixin 
-  getInitialState :  function ()  { 
-    return  { seconds :  0 }; 
-  }, 
-  componentDidMount :  function ()  { 
-    this . setInterval ( this . tick ,  1000 );  //調用mixin的方法
-  }, 
-  tick :  function ()  { 
-    this . setState ({ seconds :  this . state . seconds  +  1 }); 
-  }, 
-  render :  function ()  { 
-    return  ( 
-      < p > 
-        React  has  been  running  for  { this . state . seconds }  seconds . 
-      < /p> 
-    ); 
-  } 
-});
+	var SetIntervalMixin = {
+		componentWillMount: function () {
+			this.intervals = [];
+		},
+		setInterval: function () {
+			this.intervals.push(setInterval.apply(null, arguments));
+		},
+		componentWillUnmount: function () {
+			this.intervals.forEach(clearInterval);
+		}
+	};
 
-React . render ( 
-  < TickTock  /> , 
-  document . getElementById ( 'example' ) 
-);
-關於mixin 值得一提的優點是，如果一個組件使用了多個mixin，並且有多個mixin 定義了同樣的生命週期方法（如：多個mixin 都需要在組件銷毀時做資源清理操作），所有這些生命週期方法都保證會被執行到。方法執行順序是：首先按mixin 引入順序執行mixin 裡方法，最後執行組件內定義的方法。
+	var TickTock = React.createClass({
+		mixins: [SetIntervalMixin], // 使用 mixin
+		getInitialState: function () {
+			return {seconds: 0};
+		},
+		componentDidMount: function () {
+			this.setInterval(this.tick, 1000); // 呼叫 mixin 上的方法
+		},
+		tick: function () {
+			this.setState({seconds: this.state.seconds + 1});
+		},
+		rendr: function () {
+			return (
+				<p>
+					React has been running for {this.state.seconds} seconds.
+				</p>
+			);
+		}
+	});
+	
+	ReactDOM.render(
+		<TickTock />,
+		document.getElementById('example')
+	);
 
+關於 mixin 值得一提的優點是，如果一個元件使用了多個 mixin，並且有多個 mixin 定義了同樣的生命週期方法（例如：多個 mixin 都需要在元件銷毀時做資源清理操作），所有這些生命週期方法都保證會被執行到。方法執行順序是：首先按照 mixin 引入順序執行 mixin 裡方法，最後執行元件內定義的方法。
+
+## ES6 Classes
+你也可以定義 React classes 當作原生 JavaScript class。範例上使用 ES6 的 class 語法：
+
+	class HelloMessage extends React.Component {
+		render () {
+			return <div>Hello {this.props.name}</div>
+		}
+	}
+	ReactDOM.render(<HelloMessage name="Sebastian" />, mountNode);
+
+這個 API 跟沒有`getInitialState`的`React.createClass`相似。你可以在建構式設定自己的`state`屬性，以替代`getInitialState`方法。
+
+另一個不同的地方是`propTypes`和`defaultProps`被當作建構式的屬性，而不是在 class 裡面。
+
+	export class Counter extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = {count: props.initialCount};
+		}
+		tick() {
+			this.setState({count: this.state.count + 1});
+		}
+		render() {
+			return (
+				<div onClick={this.tick.bind(this)}>
+					Click: {this.state.count}
+				</div>
+			);
+		}
+	}
+	
+	Counter.propTypes = {initialCount: React.PropTypes.number};
+	Counter.defaultProps = {initialCount: 0};
+
+### 沒有自動綁定
+方法遵循跟普通 ES6 classes 相同的語義，這意味著它們不會自動綁定到`this`實例。你必須明確使用`.bind(this)`或 [arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)`=>`。
+
+### 沒有 Mixins
+不幸的是 ES6 不支援任何 mixin。因此，當在 React 使用 ES6 classes 將無法支援 mxins。我們正在努力使它更容易支持這樣的用法而不是求助於 mixin。
+
+## Stateless Functions
+你也可以定義你的 React classes 作為一個原生的 JavaScript function。例如使用 stateless function 語法：
+
+	function HelloMessage(props) {
+		return <div>Hello {props.name}</div>;
+	}
+	ReactDOM.render(<HelloMessage name="Sebastian" />, mountNode);
+
+或使用新的 ES6 arrow 語法：
+
+	var HelloMessage = (props) => <div>Hello {props.name}</div>;
+	ReactDOM.render(<HelloMessage name="Sebastian" />, mountNode);
+
+This simplified component API is intended for components that are pure functions of their props. 這些元件不會保留內部 state，不會有 backing instances 也不會有元件的生命週期方法。They are pure functional transforms of their input, with zero boilerplate.
+
+> **Note：**  
+> Because stateless functions don't have a backing instance, you can't attach a ref to a stateless function component. Normally this isn't an issue, since stateless functions do not provide an imperative API. Without an imperative API, there isn't much you could do with an instance anyway. However, if a user wants to find the DOM node of a stateless function component, they must wrap the component in a stateful component (eg. ES6 class component) and attach the ref to the stateful wrapper component.
+
+在一個理想的世界裡，大部分的元件是 stateless functions，因為這些無狀態的元件可以按照 React 核心內更快的程式碼路徑。這是在可能的情況下推薦的模式。
 
 # Transferring Props
+在 React 中最常見的模式是在一個抽象的概念包裝元件。外部元件暴露一個簡單的屬性做一些事情，可能有更複雜的實作細節。
+
+您可以使用 [JSX spread attributes](https://facebook.github.io/react/docs/jsx-spread.html) 來合併舊的屬性和額外的值：
+
+	<Component {...this.props} more="values" />
+
+如果你不使用 JSX，你可以使用任何物件，例如 ES6 `Object.assign`或是 Underscore 的`_.extend`：
+
+	React.createElement(Component, Object.assign({}, this.props, {more: 'values'}));
+
+本教程的其餘部分介紹的最佳做法。它使用 JSX 和 實驗中的 ES7 語法。
+
+## 手動傳輸
+
+
+
 # Forms
 # Working With the Browser
 # Working With the Browser - Refs to Components
