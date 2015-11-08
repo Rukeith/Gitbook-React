@@ -582,7 +582,166 @@ React 中，資料流透過上面介紹過的`props`從擁有者到所擁有的�
 > **注意：**  
 > 如果在資料變化時讓`shouldComponentUpdate()`返回`false`，React 就不能保證 UI 會同步。當使用它的時候一定確保你清楚到底做了什麼，並且只在遇到明顯性能問題的時候才使用它。不要低估 JavaScript 的速度，DOM 操作通常才是慢的原因。
 
-# Reusable Components
+# 可重用元件 (Reusable Components)
+設計接口的時候，把通用的設計元素（按鈕，表單框，佈局元件等）拆成接口良好定義的可重用的元件。這樣，下次開發相同 UI 時就可以寫更少的代碼，也意義著更高的開發效率，更少的Bug 和更少的程式體積。
+
+## Prop 驗證
+隨著應用不斷變大，對於確保元件被正確使用變得非常有用。為此我們讓你可以設定`propTypes`。`React.PropTypes`提供很多驗證器(validator)來驗證傳入資料的有效性。當向`props`傳入無效資料時，JavaScript console 會拋出警告。注意為了性能考慮，只在開發環境驗證`propTypes`。下面用例子來說明不同驗證器的區別：
+
+	React.createClass({
+	  propTypes: {
+	    // 可以宣告 prop 為指定的 JS 基本類型
+	    // 默認下，這些 prop 不是一定需要使用的
+	    optionalArray: React.PropTypes.array,
+	    optionalBool: React.PropTypes.bool,
+	    optionalFunc: React.PropTypes.func,
+	    optionalNumber: React.PropTypes.number,
+	    optionalObject: React.PropTypes.object,
+	    optionalString: React.PropTypes.string,
+	
+	    // Anything that can be rendered: numbers, strings, elements or an array
+	    // (or fragment) containing these types.
+	    optionalNode: React.PropTypes.node,
+	
+	    // A React element.
+	    optionalElement: React.PropTypes.element,
+	
+	    // You can also declare that a prop is an instance of a class. This uses
+	    // JS's instanceof operator.
+	    optionalMessage: React.PropTypes.instanceOf(Message),
+	
+	    // You can ensure that your prop is limited to specific values by treating
+	    // it as an enum.
+	    optionalEnum: React.PropTypes.oneOf(['News', 'Photos']),
+	
+	    // An object that could be one of many types
+	    optionalUnion: React.PropTypes.oneOfType([
+	      React.PropTypes.string,
+	      React.PropTypes.number,
+	      React.PropTypes.instanceOf(Message)
+	    ]),
+	
+	    // An array of a certain type
+	    optionalArrayOf: React.PropTypes.arrayOf(React.PropTypes.number),
+	
+	    // An object with property values of a certain type
+	    optionalObjectOf: React.PropTypes.objectOf(React.PropTypes.number),
+	
+	    // An object taking on a particular shape
+	    optionalObjectWithShape: React.PropTypes.shape({
+	      color: React.PropTypes.string,
+	      fontSize: React.PropTypes.number
+	    }),
+	
+	    // You can chain any of the above with `isRequired` to make sure a warning
+	    // is shown if the prop isn't provided.
+	    requiredFunc: React.PropTypes.func.isRequired,
+	
+	    // A value of any data type
+	    requiredAny: React.PropTypes.any.isRequired,
+	
+	    // You can also specify a custom validator. It should return an Error
+	    // object if the validation fails. Don't `console.warn` or throw, as this
+	    // won't work inside `oneOfType`.
+	    customProp: function(props, propName, componentName) {
+	      if (!/matchme/.test(props[propName])) {
+	        return new Error('Validation failed!');
+	      }
+	    }
+	  },
+	  /* ... */
+	});
+
+默認Prop 值
+React支持以聲明式的方式來定義props的默認值。
+
+var  ComponentWithDefaultProps  =  React . createClass ({ 
+  getDefaultProps :  function ()  { 
+    return  { 
+      value :  'default value' 
+    }; 
+  } 
+  /* ... */ 
+});
+當父級沒有傳入props時，getDefaultProps()可以保證 this.props.value有默認值，注意getDefaultProps的結果會被緩存。得益於此，你可以直接使用props，而不必寫手動編寫一些重複或無意義的代碼。
+
+傳遞Props：小技巧
+有一些常用的React組件只是對HTML做簡單擴展。通常，你想少寫點代碼來把傳入組件的props複製到對應的HTML元素上。這時JSX的spread語法會幫到你：
+
+var  CheckLink  =  React . createClass ({ 
+  render :  function ()  { 
+    //這樣會把CheckList所有的props複製到<a> 
+    return  < a  {... this . props } > { '√ ' }{ this . props . children } < /a>; 
+  } 
+});
+
+React . render ( 
+  < CheckLink  href = "/checked.html" > 
+    Click  here ! 
+  < /CheckLink>, 
+  document . getElementById ( 'example' ) 
+);
+單個子級
+React.PropTypes.element可以限定只能有一個子級傳入。
+
+var  MyComponent  =  React . createClass ({ 
+  propTypes :  { 
+    children :  React . PropTypes . element . isRequired 
+  },
+
+  render :  function ()  { 
+    return  ( 
+      < div > 
+        { this . props . children }  //有且僅有一個元素，否則會拋異常。
+      < /div> 
+    ); 
+  }
+
+});
+Mixins
+組件是React裡復用代碼最佳方式，但是有時一些複雜的組件間也需要共用一些功能。有時會被稱為跨切面關注點。React使用mixins來解決這類問題。
+
+一個通用的場景是：一個組件需要定期更新。用setInterval()做很容易，但當不需要它的時候取消定時器來節省內存是非常重要的。React提供生命週期方法來告知組件創建或銷毀的時間。下面來做一個簡單的mixin，使用setInterval()並保證在組件銷毀時清理定時器。
+
+var  SetIntervalMixin  =  { 
+  componentWillMount :  function ()  { 
+    this . intervals  =  []; 
+  }, 
+  setInterval :  function ()  { 
+    this . intervals . push ( setInterval . apply ( null ,  arguments )); 
+  }, 
+  componentWillUnmount :  function ()  { 
+    this . intervals . map ( clearInterval ); 
+  } 
+};
+
+var  TickTock  =  React . createClass ({ 
+  mixins :  [ SetIntervalMixin ],  //引用mixin 
+  getInitialState :  function ()  { 
+    return  { seconds :  0 }; 
+  }, 
+  componentDidMount :  function ()  { 
+    this . setInterval ( this . tick ,  1000 );  //調用mixin的方法
+  }, 
+  tick :  function ()  { 
+    this . setState ({ seconds :  this . state . seconds  +  1 }); 
+  }, 
+  render :  function ()  { 
+    return  ( 
+      < p > 
+        React  has  been  running  for  { this . state . seconds }  seconds . 
+      < /p> 
+    ); 
+  } 
+});
+
+React . render ( 
+  < TickTock  /> , 
+  document . getElementById ( 'example' ) 
+);
+關於mixin 值得一提的優點是，如果一個組件使用了多個mixin，並且有多個mixin 定義了同樣的生命週期方法（如：多個mixin 都需要在組件銷毀時做資源清理操作），所有這些生命週期方法都保證會被執行到。方法執行順序是：首先按mixin 引入順序執行mixin 裡方法，最後執行組件內定義的方法。
+
+
 # Transferring Props
 # Forms
 # Working With the Browser
