@@ -817,10 +817,239 @@ This simplified component API is intended for components that are pure functions
 本教程的其餘部分介紹的最佳做法。它使用 JSX 和 實驗中的 ES7 語法。
 
 ## 手動傳輸
+大部分情況下你應該明確地向下傳遞 props。這可以確保您只露出內部 API 的一個子集，一個你知道會運作。
 
+	var FancyCheckbox = React.createcLASS({
+		render: function () {
+			var fancyClass = this.props.checked ? 'FancyChecked' : 'FancyUnchecked';
+			return (
+				<div className={fancyClass} onClick={this.props.onClick}>
+					{this.props.children}
+				</div>
+			);
+		}
+	});
+	ReactDOM.render(
+		<FancyCheckbox check={true} onClick={console.log(console)}>
+			Hello world!
+		</FancyCheckbox>,
+		document.getElementById('example')
+	);
 
+但`name`這個屬性怎麼辦？還有`title`、`onMouseOver`這些屬性？
+
+## 在 JSX 裡使用...傳遞
+> **Note：**  
+> `...`語法是 Object Rest Spread proposal 的一部份。這個 proposal 有望成為一項標準。查看 [Rest and Spread Properties ...](https://facebook.github.io/react/docs/transferring-props.html#rest-and-spread-properties-...) 下面區塊瞭解更多。
+
+有時把所有屬性都傳下去是不安全和繁瑣的。這時可以使用 [destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) 配合剩餘屬性來把未知屬性批量提取出來。
+
+列出所有要當前使用的屬性，後面跟著`...other`。
+
+	var { checked, ...other } = this.props;
+
+這樣能確保把所有 props 傳下去，除了那些已經被使用了的。
+
+	var FancyCheckbox = React.createClass({
+		rendr: function () {
+			var { checked, ...other } = this.props;
+			var fancyClass = checked ? 'FancyChecked' : 'FancyUnchecked';
+			// `other` 包含 { onClick: console.log } 但不是包含 checked 屬性
+			<div {...other} className={fancyClass} />
+		}
+	});
+	ReactDOM.render(
+		<FancyCheckbox checked={true} onClick={console.log.bind(console)}>
+			Hello world!
+		</FancyCheckbox>,
+		document.getElementById('example')
+	);
+
+> **Note：**  
+> 上面例子中，`checked`屬性也是一個有效的 DOM 屬性。如果你沒有使用解構賦值，那麼可能無意中把它傳出去。
+
+在傳遞這些未知的`other`屬性時，要經常使用解構賦值模式。
+
+	var FancyCheckbox = React.createClass({
+		render: function () {
+			var fancyClass = this.props.checked ? 'FancyChecked' : 'FancyUnchecked';
+			// 錯誤方式：`checked` 將不會被傳遞到內部元件
+			return (
+				<div {...this.props} className={fancyClass} />
+			);
+		}
+	});
+
+## 使用和傳遞同一個 Prop
+如果元件需要使用一個屬性又要往下傳遞，可以直接使用`checked={checked}`再傳一次。這樣做比傳整個 this.props 要好，更利於重構和語法檢查。
+
+	var FancyCheckbox = React.creatClass({
+		render: function () {
+			var {checked, title, ...other} = this.props;
+			var fancyClass = checked ? 'FancyChecked' : 'FancyUnchecked';
+			var fancyTitle = checked ? 'X ' + title : 'O ' + title;
+		
+			return (
+				<label>
+					<input {...other} 
+						checked={checked}
+						className={fancyClass}
+						type="checkbox"
+					/>
+					{fancyTitle}
+				</label>
+			);
+		}
+	});
+
+> **Note：**  
+> 順序很重要，把`{...other}`放到 JSX props 前面可以確保它不被覆蓋。上面例子中我們可以保證 input 的 type 是 "checkbox"。
+
+## Rest and Spread 屬性 ...
+Rest 屬性可以把對象剩下的屬性提取到一個新的對象。會把所有在解構賦值中列出的屬性剔除。
+
+這是 [ES7 草案](https://github.com/sebmarkbage/ecmascript-rest-spread)中的試驗特性。
+
+	var { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4};
+	x; // 1
+	y; // 2
+	z; // { a: 3, b: 4}
+
+> **Note：**  
+> 這份草案已經到了第二階段而且現在在 Babel 中預設可使用。在 Babel 舊版中可能會需要使用`babel --optional es7.objectRestSpread`來啟用這個轉換。
+
+## 使用 Underscore 來傳遞
+如果不使用 JSX，可以使用一些 library 來實現相同效果。Underscore 提供`_.omit`來過濾屬性，`_.extend`複製屬性到新的對象。
+
+	var FancyCheckbox = React.creatClass({
+		render: function () {
+			var checked = this.props.checked;
+			var other = _.omit(this.props, 'checked');
+			var fancyClass = checked ? 'FancyChecked' : 'FancyUnchecked';
+			return (
+				React.DOM.div(_.extend({}, other, { className: fancyClass }))
+			);
+		}
+	});
 
 # Forms
+諸如`<input>`、`<textarea>`、`<option>`這樣的表單元件不同於其他原生元件，因為他們可以透過使用者互動發生變化。這些元件提供的界面使響應使用者互動的表單數據處理更加容易。這些元件提供的介面，使得更容易地在 UI 上響應表單管理。
+
+關於`<form>`事件詳情請查看[表單事件](https://facebook.github.io/react/docs/events.html#form-events)。
+
+## Interactive 屬性
+表單元件支援幾個受使用者互動影響的屬性：
+
+* `value`，用於`<input>`、`<textarea>`元件。
+* `checked`，用於類型為`checkbox`或者`radio`的`<input>`元件。
+* `selected`，用於`<option>`元件。
+在 HTML 中，`<textarea>`的值通過子節點設置；在 React 中則應該使用 value 代替。
+
+表單元件可以通過在`onChange`屬性設置回調函數來監聽元件變化。當使用者做出以下互動時，`onChange`執行並通過瀏覽器做出響應：
+
+* `<input>`或`<textarea>`的 value 發生變化時。
+* `<input>`的`checked`狀態改變時。
+* `<option>`的`selected`狀態改變時。
+
+和所有 DOM 事件一樣，所有的 HTML 原生元件都支持`onChange`屬性，而且可以用來監聽觸發的 change 事件。
+
+> **Note：**  
+> For `<input>` and `<textarea>`, `onChange` supersedes — and should generally be used instead of — the DOM's built-in [oninput](https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/oninput) event handler.
+
+## 控制元件
+設置了value的<input>是一個受限組件。對於受限的<input>，渲染出來的HTML元素始終保持value屬性的值。例如：
+
+  render :  function ()  { 
+    return  < input  type = "text"  value = "Hello!"  /> ; 
+  }
+上面的代碼將渲染出一個值為Hello!的input元素。用戶在渲染出來的元素裡輸入任何值都不起作用，因為React已經賦值為 Hello!。如果想響應更新用戶輸入的值，就得使用onChange事件：
+
+  getInitialState :  function ()  { 
+    return  { value :  'Hello!' }; 
+  }, 
+  handleChange :  function ( event )  { 
+    this . setState ({ value :  event . target . value }); 
+  }, 
+  render :  function ()  { 
+    var  value  =  this . state . value ; 
+    return  < input  type = "text"  value = { value }  onChange = { this . handleChange }  /> ; 
+  }
+上面的代碼中，React將用戶輸入的值更新到<input>組件的value屬性。這樣實現響應或者驗證用戶輸入的界面就很容易了。例如：
+
+  handleChange :  function ( event )  { 
+    this . setState ({ value :  event . target . value . substr ( 0 ,  140 )}); 
+  }
+上面的代碼接受用戶輸入，並截取前140 個字符。
+
+不受限組件
+沒有設置value (或者設為null )的<input>組件是一個不受限組件。對於不受限的<input>組件，渲染出來的元素直接反應用戶輸入。例如：
+
+  render :  function ()  { 
+    return  < input  type = "text"  /> ; 
+  }
+上面的代碼將渲染出一個空值的輸入框，用戶輸入將立即反應到元素上。和受限元素一樣，使用onChange事件可以監聽值的變化。
+
+如果想給組件設置一個非空的初始值，可以使用defaultValue屬性。例如：
+
+  render :  function ()  { 
+    return  < input  type = "text"  defaultValue = "Hello!"  /> ; 
+  }
+上面的代碼渲染出來的元素和受限組件一樣有一個初始值，但這個值用戶可以改變並會反應到界面上。
+
+同樣地，類型為radio、checkbox的<input>支持defaultChecked屬性，<select>支持defaultValue屬性。
+
+  render :  function ()  { 
+      return  ( 
+          < div > 
+            < input  type = "radio"  name = "opt"  defaultChecked  />  Option  1 
+            < input  type = "radio"  name = "opt"  />  Option  2 
+            < select  defaultValue = "C " > 
+              < option  value = "A" > Apple < /option> 
+              < option  value = "B" > Banana < /option> 
+              < option  value = "C" > Cranberry < /option> 
+            < /select> 
+          < /div> 
+      ) ; 
+    }
+高級主題
+為什麼使用受限組件？
+在React中使用諸如<input>的表單組件時，遇到了一個在傳統HTML中沒有的挑戰。
+
+比如下面的代碼：
+
+  <input  type= "text"  name= "title"  value= "Untitled"  />
+在HTML中將渲染初始值為Untitled的輸入框。用戶改變輸入框的值時，節點的value屬性（property）將隨之變化，但是node.getAttribute('value')還是會返回初始設置的值Untitled .
+
+與HTML 不同，React 組件必須在任何時間點描繪視圖的狀態，而不僅僅是在初始化時。比如在React 中：
+
+  render :  function ()  { 
+    return  < input  type = "text"  name = "title"  value = "Untitled"  /> ; 
+  }
+該方法在任何時間點渲染組件以後，輸入框的值就應該始終為Untitled。
+
+為什麼<textarea>使用value屬性？
+在HTML中，<textarea>的值通常使用子節點設置：
+
+  <!--反例：在React中不要這樣使用！--> 
+  <textarea  name= "description" > This is the description. </textarea>
+對HTML而言，讓開發者設置多行的值很容易。但是，React是JavaScript，沒有字符限制，可以使用\n實現換行。簡言之，React已經有value、defaultValue屬性，</textarea>組件的子節點扮演什麼角色就有點模棱兩可了。基於此，設置<textarea>值時不應該使用子節點：
+
+  < textarea  name = "description"  value = "This is a description."  />
+如果非要 *使用子節點，效果和使用defaultValue一樣。
+
+為什麼<select>使用value屬性
+HTML中<select>通常使用<option>的selected屬性設置選中狀態；React為了更方面的控制組件，採用以下方式代替：
+
+  < select  value = "B" > 
+    < option  value = "A" > Apple < /option> 
+    < option  value = "B" > Banana < /option> 
+    < option  value = "C" > Cranberry < /option> 
+  < /select >
+如果是不受限組件，則使用defaultValue。
+
+注意：
+給value屬性傳遞一個數組，可以選中多個選項：<select multiple={true} value={['B', 'C']}>。
+
 # Working With the Browser
 # Working With the Browser - Refs to Components
 # Tooling Integration
