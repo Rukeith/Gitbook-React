@@ -75,7 +75,7 @@ UI 能做的最基礎的事就是呈現一些資料。React 讓顯示資料變�
 ## 元件就像是函數
 React 元件非常簡單。你可以把它們當作是簡單的函數，接受`props`和`state`(後面會討論)作為參數，然後渲染出 HTML。把這記在心裡，元件就會非常容易理解。
 
-> 注意：  
+> **Note：**  
 > **One limitation**：React 元件只能渲染單個根節點。如果你想要返回多個節點，它們必須被包含在同一個節點裡。
 
 ## JSX 語法
@@ -147,7 +147,7 @@ React 可以渲染 HTML 標籤(strings) 或 React 元件(classes)。
 
 React 的 JSX 裡約定使用首字母大、小寫來區分本地元件的 classes 和 HTML 標籤。
 
-> **注意：**  
+> **Note：**  
 > 由於 JSX 就是 JavaScript，一些標識符像`class`和`for`不建議作為 XML 屬性名。作為替代，React DOM 元件使用`className`和`htmlFor`來做對應的屬性。
 
 ## 轉換
@@ -183,7 +183,7 @@ JSX 當 displayName 是`undefined`，將會從變數賦值判斷 class 的 [disp
 
 如果你要使用 JSX，這篇[新手入門](https://facebook.github.io/react/docs/getting-started.html)教程來教你如何搭建環境。
 
-> **注意：**  
+> **Note：**  
 > JSX 表達式總是會當作 ReactElement 執行。具體的實際細節可能不同。一種優化的模式是把 ReactElement 當作一個行內的對象字面量形式來繞過`React.createElement`裡的校驗代碼。
 
 ## 命名空間的元件
@@ -289,7 +289,7 @@ JSX 裡添加註釋很容易；它們只是 JS 表達式而已。你只需要在
 	  </Nav>
 	);
 
-> **注意：**  
+> **Note：**  
 > JSX 類似於 HTML，但不完全一樣。參考 [JSX 陷阱](https://facebook.github.io/react/docs/jsx-gotchas.html)了解主要不同。
 
 # 資料呈現 - JSX 擴展屬性
@@ -328,7 +328,7 @@ Props 應該被當作禁止修改的。修改 props 對象可能會導致預料�
 # 資料呈現 - JSX 陷阱
 JSX 與 HTML 非常相似，但是有些主要的不同點要注意。
 
-> **注意：**  
+> **Note：**  
 > 關於 DOM 的區別，如行內`style`屬性，參考[這裡](https://facebook.github.io/react/docs/dom-differences.html)
 
 ## HTML 實體
@@ -579,7 +579,7 @@ React 中，資料流透過上面介紹過的`props`從擁有者到所擁有的�
 
 然而有時候需要做細部的性能控制。這種情況下，可以重寫`shouldComponentUpdate()`方法返回`false`來讓 React 跳過對子級的處理。參考 [React reference docs](https://facebook.github.io/react/docs/component-specs.html)了解更多。
 
-> **注意：**  
+> **Note：**  
 > 如果在資料變化時讓`shouldComponentUpdate()`返回`false`，React 就不能保證 UI 會同步。當使用它的時候一定確保你清楚到底做了什麼，並且只在遇到明顯性能問題的時候才使用它。不要低估 JavaScript 的速度，DOM 操作通常才是慢的原因。
 
 # 可重用元件 (Reusable Components)
@@ -957,100 +957,252 @@ Rest 屬性可以把對象剩下的屬性提取到一個新的對象。會把所
 > For `<input>` and `<textarea>`, `onChange` supersedes — and should generally be used instead of — the DOM's built-in [oninput](https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/oninput) event handler.
 
 ## 控制元件
-設置了value的<input>是一個受限組件。對於受限的<input>，渲染出來的HTML元素始終保持value屬性的值。例如：
+設置了`value`的`<input>`是一個控制元件。對於受控制的`<input>`，渲染出來的 HTML 元素始終保持`value`屬性的值。例如：
 
-  render :  function ()  { 
-    return  < input  type = "text"  value = "Hello!"  /> ; 
-  }
-上面的代碼將渲染出一個值為Hello!的input元素。用戶在渲染出來的元素裡輸入任何值都不起作用，因為React已經賦值為 Hello!。如果想響應更新用戶輸入的值，就得使用onChange事件：
+	render: function () {
+		return <input type="text" value="Hello!" />;
+	}
 
-  getInitialState :  function ()  { 
-    return  { value :  'Hello!' }; 
-  }, 
-  handleChange :  function ( event )  { 
-    this . setState ({ value :  event . target . value }); 
-  }, 
-  render :  function ()  { 
-    var  value  =  this . state . value ; 
-    return  < input  type = "text"  value = { value }  onChange = { this . handleChange }  /> ; 
-  }
-上面的代碼中，React將用戶輸入的值更新到<input>組件的value屬性。這樣實現響應或者驗證用戶輸入的界面就很容易了。例如：
+上面的範例將渲染出一個值為`Hello!`的`input`元素。使用者在渲染出來的元素裡輸入任何值都不會起作用，因為React已經賦值為`Hello!`。如果想響應更新使用者輸入的值，就得使用`onChange`事件：
 
-  handleChange :  function ( event )  { 
-    this . setState ({ value :  event . target . value . substr ( 0 ,  140 )}); 
-  }
-上面的代碼接受用戶輸入，並截取前140 個字符。
+	getInitialState: function () {
+		return {value: 'Hello!'};
+	},
+	handleChange: function (event) {
+		this.setState({value: event.target.value});
+	},
+	render: function () {
+		var value = this.state.value;
+		return <input type="text" value={value} onChange={this.handleChange} />;
+	}
 
-不受限組件
-沒有設置value (或者設為null )的<input>組件是一個不受限組件。對於不受限的<input>組件，渲染出來的元素直接反應用戶輸入。例如：
+上面的範例中，React 將使用者輸入的值更新到`<input>`元件的`value`屬性。這樣實現響應或者驗證使用者輸入的介面就很容易了。例如：
 
-  render :  function ()  { 
-    return  < input  type = "text"  /> ; 
-  }
-上面的代碼將渲染出一個空值的輸入框，用戶輸入將立即反應到元素上。和受限元素一樣，使用onChange事件可以監聽值的變化。
+	handleChange: function (event) {
+		this.setState({value: event.target.value.substr(0, 140)});
+	}
 
-如果想給組件設置一個非空的初始值，可以使用defaultValue屬性。例如：
+這將會接收使用者的輸入但是會擷取前 140 個字符。
 
-  render :  function ()  { 
-    return  < input  type = "text"  defaultValue = "Hello!"  /> ; 
-  }
-上面的代碼渲染出來的元素和受限組件一樣有一個初始值，但這個值用戶可以改變並會反應到界面上。
+### 複選框和單選按鈕的潛在問題
+要知道，在試圖正常化 checkbox 和 radio 的`change`事件處理，React 使用了`click`事件取代`change`事件。For the most part this behaves as expected, except when calling `preventDefault` in a `change` handler. `preventDefault` stops the browser from visually updating the input, even if `checked` gets toggled. This can be worked around either by removing the call to `preventDefault`, or putting the toggle of `checked` in a `setTimeout`.
 
-同樣地，類型為radio、checkbox的<input>支持defaultChecked屬性，<select>支持defaultValue屬性。
+## 不受控制元件
+沒有設置`value` (或者設為`null`)的`<input>`元件是一個不受限元件。對於不受限的`<input>`元件，渲染出來的元素會直接反應使用者輸入。例如：
 
-  render :  function ()  { 
-      return  ( 
-          < div > 
-            < input  type = "radio"  name = "opt"  defaultChecked  />  Option  1 
-            < input  type = "radio"  name = "opt"  />  Option  2 
-            < select  defaultValue = "C " > 
-              < option  value = "A" > Apple < /option> 
-              < option  value = "B" > Banana < /option> 
-              < option  value = "C" > Cranberry < /option> 
-            < /select> 
-          < /div> 
-      ) ; 
-    }
-高級主題
-為什麼使用受限組件？
-在React中使用諸如<input>的表單組件時，遇到了一個在傳統HTML中沒有的挑戰。
+	render: function () {
+		return <input type="text" />;
+	}
 
-比如下面的代碼：
+這將渲染出一個空值的輸入框，使用者輸入的值將立即反應到元素上。如果想要監聽值的更新，就和受限元素一樣，使用`onChange`事件。
 
-  <input  type= "text"  name= "title"  value= "Untitled"  />
-在HTML中將渲染初始值為Untitled的輸入框。用戶改變輸入框的值時，節點的value屬性（property）將隨之變化，但是node.getAttribute('value')還是會返回初始設置的值Untitled .
+### 預設值
+如果想給元件設置一個非空的初始值，可以使用`defaultValue`屬性。例如：
 
-與HTML 不同，React 組件必須在任何時間點描繪視圖的狀態，而不僅僅是在初始化時。比如在React 中：
+	render: function () {
+		return <input type="text" defaultValue="Hello!" />;
+	}
 
-  render :  function ()  { 
-    return  < input  type = "text"  name = "title"  value = "Untitled"  /> ; 
-  }
-該方法在任何時間點渲染組件以後，輸入框的值就應該始終為Untitled。
+這個範例渲染出來的元素和**受限元件**一樣有一個初始值，但這個值用戶可以改變並會反應到界面上。
+同樣地，類型為`radio`、`checkbox`的`<input>`支持`defaultChecked`屬性，`<select>`支持`defaultValue`屬性。
 
-為什麼<textarea>使用value屬性？
-在HTML中，<textarea>的值通常使用子節點設置：
+	render: function () {
+		return (
+			<div>
+				<input type="radio" name="opt" defaultChecked /> Option 1
+				<input type="radio" name="opt" /> Option 2
+				<select defaultValue="C">
+					<option value="A">Apple</option>
+					<option value="B">Banana</option>
+					<option value="C">Cranberry</option>
+				</select>
+			</div>
+		);
+	}
 
-  <!--反例：在React中不要這樣使用！--> 
-  <textarea  name= "description" > This is the description. </textarea>
-對HTML而言，讓開發者設置多行的值很容易。但是，React是JavaScript，沒有字符限制，可以使用\n實現換行。簡言之，React已經有value、defaultValue屬性，</textarea>組件的子節點扮演什麼角色就有點模棱兩可了。基於此，設置<textarea>值時不應該使用子節點：
+> **Note：**  
+> `defaultValue`和`defaultChecked`屬性只會在第一次渲染時使用到。如果你需要在隨後的渲染更新值，你將會需要使用[控制元件](https://facebook.github.io/react/docs/forms.html#controlled-components)
 
-  < textarea  name = "description"  value = "This is a description."  />
-如果非要 *使用子節點，效果和使用defaultValue一樣。
+## 進階主題
+### 為什麼使用控制元件？
+在 React 中使用諸如`<input>`的表單元件時，遇到了一個在傳統 HTML 中沒有的挑戰。比如下面的在 HTML 的範例：
 
-為什麼<select>使用value屬性
-HTML中<select>通常使用<option>的selected屬性設置選中狀態；React為了更方面的控制組件，採用以下方式代替：
+	<input type="text" name="title" value="Untitled" />
 
-  < select  value = "B" > 
-    < option  value = "A" > Apple < /option> 
-    < option  value = "B" > Banana < /option> 
-    < option  value = "C" > Cranberry < /option> 
-  < /select >
-如果是不受限組件，則使用defaultValue。
+在 HTML 中將渲染*初始值*為`Untitled`的輸入框。當使用者改變輸入框的值時，節點的`value`*屬性（property）*將隨之變化，然而`node.getAttribute('value')`還是會返回初始設置的值`Untitled`。
 
-注意：
-給value屬性傳遞一個數組，可以選中多個選項：<select multiple={true} value={['B', 'C']}>。
+與 HTML 不同，React 元件必須在任何時間點描繪視圖的狀態，而不僅僅是在初始化時。比如在 React 中：
+
+	render: function () {
+		return <input type="text" name="title" value="Untitled" />;
+	}
+
+該方法在任何時間點渲染組件以後，輸入框的值就應該*始終*為`Untitled`。
+
+### 為什麼`<textarea>`使用`value`屬性？
+在 HTML 中，`<textarea>`的值通常使用子節點設置：
+
+	<!--反例：在React中不要這樣使用！--> 
+	<textarea name="description">This is the description.</textarea>
+
+對 HTML 而言，讓開發者設置多行的值很容易。然而，因為 React 是 JavaScript，沒有字符限制，可以使用`\n`實現換行。簡言之，React 已經有`value`、`defaultValue`屬性，`</textarea>`元件的子節點扮演什麼角色就有點模棱兩可了。基於此，設置`<textarea>`值時不應該使用子節點：
+
+	<textarea name="description" value="This is the description." />
+
+如果非*要*使用子節點，效果上和使用`defaultValue`一樣。
+
+### 為什麼`<select>`使用`value`屬性
+HTML 中`<select>`通常使用`<option>`的`selected`屬性設置選中狀態；React 為了更方便的控制元件，採用以下方式代替：
+
+	<select value="B">
+		<option value="A">Apple</option>
+		<option value="B">Banana</option>
+		<option value="C">Cranberry</option>
+	</select>
+
+如果是不受限組件，則使用`defaultValue`替代。
+
+> **Note：**  
+> 可以向`value`屬性傳遞一個陣列，可以在`select`標籤中選擇多個選項：`<select multiple={true} value={['B', 'C']} />`。
 
 # Working With the Browser
+React 提供了強大的抽象功能，讓你在大多數的使用情境中不再需要直接操作 DOM，但是有時你還是需要簡單地調用底層的 API，或者使用第三方 library 或已存在的程式碼。
+
+## 虛擬 DOM
+React 是很快的，因为它從不直接操作 DOM。React 在内存中維護一个快速响应的DOM描述。render()方法返回一个DOM的描述，React能够利用内存中的描述来快速地计算出差异，然后更新浏览器中的DOM。
+
+另外，React实现了一个完备的虚拟事件系统，尽管各个浏览器都有自己的怪异行为，React确保所有事件对象都符合W3C规范，并且持续冒泡，用一种高性能的方式跨浏览器（and everything bubbles consistently and in a performant way cross-browser）。你甚至可以在IE8中使用一些HTML5的事件！
+
+大多数时候你应该呆在React的“虚拟浏览器”世界里面，因为它性能更加好，并且容易思考。但是，有时你简单地需要调用底层的API，或许借助于第三方的类似于jQuery插件这种库。React为你提供了直接使用底层DOM API的途径。
+
+## `Refs`和`getDOMNode()`
+为了和浏览器交互，你将需要对DOM节点的引用。每一个挂载的React组件有一个getDOMNode()方法，你可以调用这个方法来获取对该节点的引用。
+
+> **Note：**  
+> getDOMNode()仅在挂载的组件上有效（也就是说，组件已经被放进了DOM中）。如果你尝试在一个未被挂载的组件上调用这个函数（例如在创建组件的render()函数中调用getDOMNode()），将会抛出异常。
+为了获取一个到React组件的引用，你可以使用this来得到当前的React组件，或者你可以使用refs来指向一个你拥有的组件。它们像这样工作：
+
+var MyComponent = React.createClass({
+  handleClick: function() {
+    // Explicitly focus the text input using the raw DOM API.
+    this.refs.myTextInput.getDOMNode().focus();
+  },
+  render: function() {
+    // The ref attribute adds a reference to the component to
+    // this.refs when the component is mounted.
+    return (
+      <div>
+        <input type="text" ref="myTextInput" />
+        <input
+          type="button"
+          value="Focus the text input"
+          onClick={this.handleClick}
+        />
+      </div>
+    );
+  }
+});
+
+React.render(
+  <MyComponent />,
+  document.getElementById('example')
+);
+## 更多关于 Refs
+为了学习更多有关Refs的内容，包括如何有效地使用它们，参考我们的更多关于Refs文档。
+
+## 组件生命周期
+组件的生命周期包含三个主要部分：
+
+挂载： 组件被插入到DOM中。
+更新： 组件被重新渲染，查明DOM是否应该刷新。
+移除： 组件从DOM中移除。
+React提供生命周期方法，你可以在这些方法中放入自己的代码。我们提供will方法，会在某些行为发生之前调用，和did方法，会在某些行为发生之后调用。
+
+### 挂载
+getInitialState(): object在组件被挂载之前调用。状态化的组件应该实现这个方法，返回初始的state数据。
+componentWillMount()在挂载发生之前立即被调用。
+componentDidMount()在挂载结束之后马上被调用。需要DOM节点的初始化操作应该放在这里。
+### 更新
+componentWillReceiveProps(object nextProps)当一个挂载的组件接收到新的props的时候被调用。该方法应该用于比较this.props和nextProps，然后使用this.setState()来改变state。
+shouldComponentUpdate(object nextProps, object nextState): boolean当组件做出是否要更新DOM的决定的时候被调用。实现该函数，优化this.props和nextProps，以及this.state和nextState的比较，如果不需要React更新DOM，则返回false。
+componentWillUpdate(object nextProps, object nextState)在更新发生之前被调用。你可以在这里调用this.setState()。
+componentDidUpdate(object prevProps, object prevState)在更新发生之后调用。
+### 移除
+componentWillUnmount()在组件移除和销毁之前被调用。清理工作应该放在这里。
+### 挂载的方法（Mounted Methods）
+挂载的复合组件也支持如下方法：
+
+getDOMNode(): DOMElement可以在任何挂载的组件上面调用，用于获取一个指向它的渲染DOM节点的引用。
+forceUpdate()当你知道一些很深的组件state已经改变了的时候，可以在该组件上面调用，而不是使用this.setState()。
+## 跨浏览器支持和兼容代码（Browser Support and Polyfills）
+在Facebook，我们支持低版本的浏览器，包括IE8。我们已经写好兼容代码很长时间了，这能让我们写有远见的JS。这意味着我们没有零散的骇客代码充斥在我们的代码库里面，并且我们依然能够预计我们的代码“正常工作起来”。例如，不使用+new Date()，我们能够写Date.now()。 At Facebook, we support older browsers, including IE8. We've had polyfills in place for a long time to allow us to write forward-thinking JS. This means we don't have a bunch of hacks scattered throughout our codebase and we can still expect our code to "just work". For example, instead of seeing +new Date(), we can just write Date.now(). Since the open source React is the same as what we use internally, we've carried over this philosophy of using forward thinking JS.
+
+In addition to that philosophy, we've also taken the stance that we, as authors of a JS library, should not be shipping polyfills as a part of our library. If every library did this, there's a good chance you'd be sending down the same polyfill multiple times, which could be a sizable chunk of dead code. If your product needs to support older browsers, chances are you're already using something like es5-shim.
+
+### 支持低版本浏览器的兼容代码
+kriskowal的es5-shim es5-shim.js 提供了以下react需要的api：
+
+Array.isArray
+Array.prototype.every
+Array.prototype.forEach
+Array.prototype.indexOf
+Array.prototype.map
+Date.now
+Function.prototype.bind
+Object.keys
+String.prototype.split
+String.prototype.trim
+kriskowal的es5-shim es5-sham.js 同样提供了以下react需要的api：
+
+Object.create
+Object.freeze
+The unminified build of React needs the following from paulmillr's console-polyfill.
+
+console.*
+When using HTML5 elements in IE8 including <section>, <article>, <nav>, <header>, and <footer>, it's also necessary to include html5shiv or a similar script.
+
+### Cross-browser Issues
+Although React is pretty good at abstracting browser differences, some browsers are limited or present quirky behaviors that we couldn't find a workaround for.
+
+onScroll event on IE8
+On IE8 the onScroll event doesn't bubble and IE8 doesn't have an API to define handlers to the capturing phase of an event, meaning there is no way for React to listen to these events. Currently a handler to this event is ignored on IE8.
+
+See the onScroll doesn't work in IE8 GitHub issue for more information. ve carried over this philosophy of using forward thinking JS.
+
+In addition to that philosophy, we've also taken the stance that we, as authors of a JS library, should not be shipping polyfills as a part of our library. If every library did this, there's a good chance you'd be sending down the same polyfill multiple times, which could be a sizable chunk of dead code. If your product needs to support older browsers, chances are you're already using something like es5-shim.
+
+### Polyfills Needed to Support Older Browsers
+es5-shim.js from kriskowal's es5-shim provides the following that React needs:
+
+Array.isArray
+Array.prototype.every
+Array.prototype.forEach
+Array.prototype.indexOf
+Array.prototype.map
+Date.now
+Function.prototype.bind
+Object.keys
+String.prototype.split
+String.prototype.trim
+es5-sham.js, also from kriskowal's es5-shim, provides the following that React needs:
+
+Object.create
+Object.freeze
+The unminified build of React needs the following from paulmillr's console-polyfill.
+
+console.*
+When using HTML5 elements in IE8 including <section>, <article>, <nav>, <header>, and <footer>, it's also necessary to include html5shiv or a similar script.
+
+### Cross-browser Issues
+Although React is pretty good at abstracting browser differences, some browsers are limited or present quirky behaviors that we couldn't find a workaround for.
+
+#### onScroll event on IE8
+On IE8 the onScroll event doesn't bubble and IE8 doesn't have an API to define handlers to the capturing phase of an event, meaning there is no way for React to listen to these events. Currently a handler to this event is ignored on IE8.
+
+See the onScroll doesn't work in IE8 GitHub issue for more information.
+
+
+
 # Working With the Browser - Refs to Components
 # Tooling Integration
 # Add-Ons
