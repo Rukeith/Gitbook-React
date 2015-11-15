@@ -1069,56 +1069,24 @@ HTML 中`<select>`通常使用`<option>`的`selected`屬性設置選中狀態；
 React 提供了強大的抽象功能，讓你在大多數的使用情境中不再需要直接操作 DOM，但是有時你還是需要簡單地調用底層的 API，或者使用第三方 library 或已存在的程式碼。
 
 ## 虛擬 DOM
-React 是很快的，因为它從不直接操作 DOM。React 在内存中維護一个快速响应的DOM描述。render()方法返回一个DOM的描述，React能够利用内存中的描述来快速地计算出差异，然后更新浏览器中的DOM。
+React 是很快的，因为它從不直接操作 DOM。React 在内存中維護一个快速響應的 DOM。`render()`方法其實是回傳一個 DOM 的*描述*，React 能夠利用内存中的描述来計算出最快更新到瀏覽器的方法。
 
-另外，React实现了一个完备的虚拟事件系统，尽管各个浏览器都有自己的怪异行为，React确保所有事件对象都符合W3C规范，并且持续冒泡，用一种高性能的方式跨浏览器（and everything bubbles consistently and in a performant way cross-browser）。你甚至可以在IE8中使用一些HTML5的事件！
+另外，React 實現了一个完備的虛擬事件系统，儘管各個瀏覽器都有自己的怪異行為，React 確保所有事件物件都符合 W3C 規範，並且持續觸發，用一種高性能的方式跨瀏覽器（and everything bubbles consistently and in a performant way cross-browser）。你甚至可以在 IE8 中使用一些HTML5 的事件！
 
-大多数时候你应该呆在React的“虚拟浏览器”世界里面，因为它性能更加好，并且容易思考。但是，有时你简单地需要调用底层的API，或许借助于第三方的类似于jQuery插件这种库。React为你提供了直接使用底层DOM API的途径。
+大多數時候你應該待在 React 的 “虛擬瀏覽器” 世界裡，因为它性能更加好且容易理解。然而，有時你需要簡單地調用底層的 API，或者借助於第三方類似 jQuery 插件這種 library。React 為你提供了直接使用底層 DOM API 的途徑。
 
 ## `Refs`和`getDOMNode()`
-为了和浏览器交互，你将需要对DOM节点的引用。每一个挂载的React组件有一个getDOMNode()方法，你可以调用这个方法来获取对该节点的引用。
+為了和瀏覽器互動，你將需要一個對 DOM 節點的引用。你可以在每個元素附上`ref`，它允許你引用元件的**backing instance**。如果您需要調用元件的必要功能，或者希望訪問底層 DOM 節點，這會非常有用。想了解更多關於 refs，包括如何有效地使用它們，請參閱我們的 [refs to components](https://facebook.github.io/react/docs/more-about-refs.html) 文件。
 
-> **Note：**  
-> getDOMNode()仅在挂载的组件上有效（也就是说，组件已经被放进了DOM中）。如果你尝试在一个未被挂载的组件上调用这个函数（例如在创建组件的render()函数中调用getDOMNode()），将会抛出异常。
-为了获取一个到React组件的引用，你可以使用this来得到当前的React组件，或者你可以使用refs来指向一个你拥有的组件。它们像这样工作：
+## 元件生命週期
+元件的生命週期包含三個主要部分：
 
-var MyComponent = React.createClass({
-  handleClick: function() {
-    // Explicitly focus the text input using the raw DOM API.
-    this.refs.myTextInput.getDOMNode().focus();
-  },
-  render: function() {
-    // The ref attribute adds a reference to the component to
-    // this.refs when the component is mounted.
-    return (
-      <div>
-        <input type="text" ref="myTextInput" />
-        <input
-          type="button"
-          value="Focus the text input"
-          onClick={this.handleClick}
-        />
-      </div>
-    );
-  }
-});
+* **掛载：** 元件被插入到 DOM 中。
+* **更新：** 元件被重新渲染，查明 DOM 是否應該刷新。
+* **卸載：** 元件從 DOM 中移除。
+React 提供生命周期方法，你可以在這些方法中放入自己的程式碼。我們提供 **will** 方法，會在某些行為發生之前調用，和 **did** 方法，會在某些行為發生之後調用。
 
-React.render(
-  <MyComponent />,
-  document.getElementById('example')
-);
-## 更多关于 Refs
-为了学习更多有关Refs的内容，包括如何有效地使用它们，参考我们的更多关于Refs文档。
-
-## 组件生命周期
-组件的生命周期包含三个主要部分：
-
-挂载： 组件被插入到DOM中。
-更新： 组件被重新渲染，查明DOM是否应该刷新。
-移除： 组件从DOM中移除。
-React提供生命周期方法，你可以在这些方法中放入自己的代码。我们提供will方法，会在某些行为发生之前调用，和did方法，会在某些行为发生之后调用。
-
-### 挂载
+### 掛載
 getInitialState(): object在组件被挂载之前调用。状态化的组件应该实现这个方法，返回初始的state数据。
 componentWillMount()在挂载发生之前立即被调用。
 componentDidMount()在挂载结束之后马上被调用。需要DOM节点的初始化操作应该放在这里。
@@ -1127,7 +1095,7 @@ componentWillReceiveProps(object nextProps)当一个挂载的组件接收到新�
 shouldComponentUpdate(object nextProps, object nextState): boolean当组件做出是否要更新DOM的决定的时候被调用。实现该函数，优化this.props和nextProps，以及this.state和nextState的比较，如果不需要React更新DOM，则返回false。
 componentWillUpdate(object nextProps, object nextState)在更新发生之前被调用。你可以在这里调用this.setState()。
 componentDidUpdate(object prevProps, object prevState)在更新发生之后调用。
-### 移除
+### 卸載
 componentWillUnmount()在组件移除和销毁之前被调用。清理工作应该放在这里。
 ### 挂载的方法（Mounted Methods）
 挂载的复合组件也支持如下方法：
