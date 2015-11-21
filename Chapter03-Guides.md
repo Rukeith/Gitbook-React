@@ -1189,61 +1189,122 @@ React 支援一種特殊的屬性，你可以綁定到任何元件上。`ref`屬
 		this._input.focus();
 	},
 
+當綁定一個 ref 到 DOM 元件，像是`<div />`。你會得到 DOM 節點; 當綁定一個 ref 到複合元件，像是`<TextInput />`，你將會得到 React class 實例。在第二種情況下，你可以調用該元件的方法，如果有任何被暴露在它的 class 定義。
 
+需要注意的是，當引用的元件被卸載以及 ref 有變化，舊的 ref 將為`null`並作為一個參數。這可以防止記憶體洩漏，該實例被存儲，像是在第一實施例的情況。另外也要注意，可以寫把 refs 寫在內聯函數表達式，一如這裡的例子。React 會在每次更新時，查看不同的函數對象。ref 將會在它調用元件實例時立刻被調用為`null`。
 
+## ref 字串屬性
+React 也支援在每個元件上使用字串當作 ref 屬性，雖然這種方法是之前的遺產。
 
+1. 指定任何從`render`回傳的`ref`屬性，例如：  
 
-當附加裁判一個DOM組件如<DIV/>，你得到的DOM節點備用;附加裁判像<的TextInput/>複合組件時，你會得到陣營類實例。在後一種情況下，你可以調用該組件的方法，如果有的話被暴露在它的類定義。
+		<input ref="myInput" />
+	
+2. 在一些其他的代碼（通常是事件處理程序代碼），透過`this.refs`來存取 **backing instance**，例如：
 
-需要注意的是，當引用的組件被卸載，每當裁判的變化，舊的裁判將被稱為null作為一個參數。這可以防止存儲器洩漏，該實例是存儲，如在第一實施例的情況。另請注意，寫裁判與內聯函數表達式時，在這裡的例子，每一個做出反應等每次更新，裁判將被稱為空立即之前，它被稱為組件實例時看到一個不同的函數對象。
+		var input = this.refs.myInput;
+		var inputValue = input.value;
+		var inputReact = input.getBoundingClientRect();
 
 ## 完成示例
-  var  App  =  React . createClass ({ 
-    getInitialState :  function ()  { 
-      return  { userInput :  '' }; 
-    }, 
-    handleChange :  function ( e )  { 
-      this . setState ({ userInput :  e . target . value }); 
-    }, 
-    clearAndFocusInput :  function ()  { 
-      // Clear the input 
-      this . setState ({ userInput :  '' },  function ()  { 
-        // This code executes after the component is re-rendered 
-        this . refs . theInput . getDOMNode (). focus ();    // Boom! Focused! 
-      }); 
-    }, 
-    render :  function ()  { 
-      return  ( 
-        < div > 
-          < div  onClick = { this . clearAndFocusInput } > 
-            Click  to  Focus  and  Reset 
-          < /div> 
-          < input 
-            ref = "theInput" 
-            value = { this . state . userInput } 
-            onChange = { this . handleChange } 
-          /> 
-        < /div> 
-      ); 
-    } 
-  });
-在這個例子中， render函數返回一個<input />實例的描述。但是真正的實例通過this.refs.theInput獲取。只要render返回的某個子組件帶有ref="theInput"，this.refs.theInput就會獲取到正確的實例。這甚至對於更高層的（非DOM ）組件生效，例如<Typeahead ref="myTypeahead" />。
+為了取得一個 referenece 到 React 元件，你可以使用`this`來得到當前的 React 元件，或是可以使用 ref 來得到一個你擁有元件的 reference。它們的運作像下面：
+
+	var MyComponent = React.createClass({
+		handleClick: function () {
+			// 明確地使用原生 DOM API 來 focus text input
+			this.myTextInput.focus();
+		},
+		render: function () {
+			// ref 屬性添加一個 reference 到元件的 this.refs 當元件掛載時
+			return (
+				<div>
+					<input type="text" ref={(ref) => this.myTextInput = ref} />
+					<input type="button" value="Focus the text input" onClick={this.handleClick} />
+				</div>
+			);
+		}
+	});
+
+	ReactDOM.render(<MyComponent />, document.getElementById("example"));
+
+在這個範例中，我們可以從 text input 的 **backing instance** 取得一個 referenece，而且會在按鈕被點擊時調用`focus()`。
+
+對於複合元件，這個 reference 將參考元件 class的實例，所以你將可以調用被該 class 定義的任何方法。如果你需要存取元件的底層 DOM 節點，你可以使用 [ReactDOM.findDOMNode](https://facebook.github.io/react/docs/top-level-api.html#reactdom.finddomnode) 作為"太空艙"，但是我們並不建議，因為它會打破封裝而且在大多情況下，有一個更清晰的方式可以在 React model 內建構你的程式碼。
 
 ## 總結
-Refs是一種給指定的子組件實例發送消息的很好的方式，從某種程度上來看，通過props和state來做這件事倒顯得不太方便。Refs are a great way to send a message to a particular child instance in a way that would be inconvenient to do via streaming Reactive props and state . They should, however, not be your go-to abstraction for flowing data through your application. By default, use the Reactive data flow and save ref s for use cases that are inherently non-reactive.
+Refs 是一種給指定的子元件實例發送消息的很好的方式，從某種程度上來看，通過`props`和`state`來做這件事倒顯得不太方便。They should, however, not be your go-to abstraction for flowing data through your application. By default, use the Reactive data flow and save ref s for use cases that are inherently non-reactive.
 
 ### 優點：
-可以在組件類裡面定義任何公共的方法（比如在輸入之前的重置方法），然後通過refs來調用這些公共的方法（比如this.refs.myTypeahead.reset()）。
-管理DOM幾乎總是需要衝出“本地”組件的限制，比如通過this.refs.myInput.getDOMNode()獲取<input />元素的底層DOM節點。Refs是做這件事唯一可靠的方式。
-Refs 是被自動管理的！如果某個子級實例被銷毀了，它的ref 也會自動銷毀。不用考慮內存問題（除非你自己做一些瘋狂的操作，保存了什麼引用）。
+* 可以在元件 classes 裡面定義任何公共的方法（比如在預輸入的重置方法），然後通過 refs 來調用這些公共的方法（比如`this.refs.myTypeahead.reset()`）。在大多數的情況下，你可以使用內建的 React 資料流來取代使用 refs。
+* 執行 DOM 幾乎需要深入到 “原生的” 元件，比如通過 ref 獲取`<input />`元素的底層 DOM 節點。Refs 是做這件事唯一可靠的方式。
+* Refs 是被自動管理的！如果某個子級實例被銷毀了，它的 ref 也會自動銷毀。不用考慮內存問題（除非你自己做一些瘋狂的操作，保存了什麼 reference）。
+
 ### 當心:
-絕不要在任何組件的render方法中訪問refs -或者在某個組件的render方法正在調用堆棧中運行的時候。
-If you want to preserve Google Closure Compiler Crushing resilience, make sure to never access as a property what was specified as a string. This means you must access using this.refs['myRefString'] if your ref was defined as ref="myRefString " .
-If you have not programmed several apps with React, your first inclination is usually going to be to try to use refs to "make things happen" in your app. If this is the case, take a moment and think more critically about where state should be owned in the component hierarchy. Often, it becomes clear that the proper place to "own" that state is at a higher level in the hierarchy. Placing the state there often eliminates any desire to use ref s to "make things happen" – instead, the data flow will usually accomplish your goal.
-
-
+* *絕不要*在任何元件的`render`方法中存取 refs - 或者在某個元件的`render`方法正在調用 stack 中運行的時候。
+* If you want to preserve Google Closure Compiler advanced-mode crushing resilience, make sure to never access as a property what was specified as a string. This means you must access using `this.refs['myRefString']` if your ref was defined as `ref="myRefString"`.
+* If you have not programmed several apps with React, your first inclination is usually going to be to try to use refs to "make things happen" in your app. If this is the case, take a moment and think more critically about where `state` should be owned in the component hierarchy. Often, it becomes clear that the proper place to "own" that state is at a higher level in the hierarchy. Placing the state there often eliminates any desire to use `refs` to "make things happen" – instead, the data flow will usually accomplish your goal.
+* Refs may not be attached to a [stateless function](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions), because the component does not have a backing instance. You can always wrap a stateless component in a standard composite component and attach a ref to the composite component.
 
 # Tooling Integration
+每個專案都使用了不同的系統來構建和部署 JavaScript。我們嘗試盡量讓 React 不受環境影響。
+
+## React
+### CDN-hosted React
+我們在我們的[下載頁面](https://facebook.github.io/react/downloads.html)提供了 React 的 CDN-hosted 版本。這些預構建的檔案使用 UMD 模塊格式。直接簡單地把它們放在`<script>`標籤中將會給在你的環境中插入一個全域的 React 物件。React 也可以在CommonJS和AMD環境下正常工作。
+
+### 使用主分支
+我們在 [GitHub 倉庫](https://github.com/facebook/react)的主分支上有一些構建指令。我們在`build/modules`下構建了符合 CommonJS 模組規範的樹形目錄，你可以放置在任何環境或者使用任何打包工具，只要支援 CommonJS 規範。
+
+## JSX
+### 瀏覽器中的JSX轉換
+如果你喜歡使用 JSX，Babel 提供了 [in-browser ES6 and JSX transformer for development](http://babeljs.io/docs/usage/browser/) 叫做 browser.js。可以從`babel-core`的 npm 套件引入或是從 [CDNJS](http://cdnjs.com/libraries/babel-core)。用一個`<script type="text/babel">`標籤來觸發 JSX 轉換器。
+
+> **注意：** 
+> 瀏覽器中的 JSX 轉換器是相當大的，並且會在客戶端導致無謂的計算，這些計算是可以避免的。不要在生產環境使用 - 參考下一節。
+
+### 生產環境化：預編譯 JSX
+如果你有 [npm](https://www.npmjs.com/)，你可以簡單地運行`npm install -g babel-cli`。Babel 內建支援到 React v0.12+。標籤會自動轉換到其等效的`React.createElement（...）`,`displayName`自動推斷並添加到所有`React.createClass`呼叫。
+
+這個工具會把使用 JSX 語法的文件轉換成可以直接在瀏覽器裡面運行起來的原生 JavaScript 文件。它也會為你監聽目錄，然後自動轉換變化的文件；例如：`babel --watch src/ --out-dir lib/`。
+
+從 Babel 6 開始，默認情況下並不包括轉換。這意味著在執行`babel`指令時，必須指定選項，或是`.babelrc`必須指定選項。Additional packages must also be installed which bundle together a number of transforms, called presets. The most common use when working with React will be to include the es2015 and react presets. More information about the changes to Babel can be found in [their blog post announcing Babel 6](http://babeljs.io/blog/2015/10/29/6.0.0/)。
+
+這裡是一個例子，如果你使用了 ES2015 格式和 React
+
+	npm install babel-preset-es2015 babel-preset-react
+	babel --presets es2015,react --watch src/ --out-dir lib/
+
+預設的 JSX 檔案會轉換成副檔名為`.js`的檔案。執行`babel --help`來瞭解更多使用 Babel 的方法。
+
+	$ cat test.jsx
+	var HelloMessage = React.createClass({
+	  render: function() {
+	    return <div>Hello {this.props.name}</div>;
+	  }
+	});
+	
+	ReactDOM.render(<HelloMessage name="John" />, mountNode);
+	$ babel test.jsx
+	"use strict";
+	
+	var HelloMessage = React.createClass({
+	  displayName: "HelloMessage",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      null,
+	      "Hello ",
+	      this.props.name
+	    );
+	  }
+	});
+	
+	ReactDOM.render(React.createElement(HelloMessage, { name: "John" }), mountNode);
+
+## 有用的開源項目
+開源社區開發了在幾款編輯器中集成 JSX 的插件和構建系統。點擊 [JSX 集成](https://github.com/facebook/react/wiki/Complementary-Tools#jsx-integrations)查看所有內容。
+
 # Add-Ons
 # Add-Ons - Animation
 # Add-Ons - Two-Way Binding Helpers
