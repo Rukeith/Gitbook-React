@@ -38,9 +38,9 @@ UI 能做的最基礎的事就是呈現一些資料。React 讓顯示資料變�
 	  <body>
 	    <div id="example"></div>
 	    <script type="text/babel">
-	
+
 	      // ** Your code goes here! **
-	
+
 	    </script>
 	  </body>
 	</html>
@@ -57,7 +57,7 @@ UI 能做的最基礎的事就是呈現一些資料。React 讓顯示資料變�
 	    );
 	  }
 	});
-	
+
 	setInterval(function() {
 	  ReactDOM.render(
 	    <HelloWorld date={new Date()} />,
@@ -113,7 +113,7 @@ JSX 類似於HTML，但不是完全一樣。參考 [JSX 陷阱](https://facebook
 	...
 	var root = Factory({ custom: 'prop' });
 	ReactDOM.render(root, document.getElementById('example'));
-	
+
 React 已經為 HTML 標籤提供內置工廠方法。
 
 	var root = React.DOM.ul({ className: 'my-list' },
@@ -194,7 +194,7 @@ JSX 當 displayName 是`undefined`，將會從變數賦值判斷 class 的 [disp
 	var FormRow = Form.Row;
 	var FormLabel = Form.Label;
 	var FormInput = Form.Input;
-	
+
 	var App = (
 	  <Form>
 	    <FormRow>
@@ -207,7 +207,7 @@ JSX 當 displayName 是`undefined`，將會從變數賦值判斷 class 的 [disp
 為了使其更簡單，更容易。命名空間元件讓你使用一個元件，它把其他元件當作屬性。
 
 	var Form = MyFormComponent;
-	
+
 	var App = (
 	  <Form>
 	    <Form.Row>
@@ -220,7 +220,7 @@ JSX 當 displayName 是`undefined`，將會從變數賦值判斷 class 的 [disp
 要做到這一點，你只需要建立你的"子元件"當作主元件的屬性。
 
 	var MyFormComponent = React.createClass({ ... });
-	
+
 	MyFormComponent.Row = React.createClass({ ... });
 	MyFormComponent.Label = React.createClass({ ... });
 	MyFormComponent.Input = React.createClass({ ... });
@@ -257,7 +257,7 @@ JSX 將會在編譯程式碼時處理成正確的原生 JavaScript。
 	// These two are equivalent in JSX for disabling a button
 	<input type="button" disabled />;
 	<input type="button" disabled={true} />;
-	
+
 	// And these two are equivalent in JSX for not disabling a button
 	<input type="button" />;
 	<input type="button" disabled={false} />;
@@ -386,7 +386,7 @@ HTML 實體可以插入到 JSX 的文本中：
 	    );
 	  }
 	});
-	
+
 	ReactDOM.render(
 	  <LikeButton />,
 	  document.getElementById('example')
@@ -448,7 +448,7 @@ React 裡，只需更新元件的 state，然後根據新的 state 重新渲染 
 			);
 		}
 	});
-	
+
 	var ProfilePic = React.createClass({
 		render: function () {
 			return (
@@ -466,7 +466,7 @@ React 裡，只需更新元件的 state，然後根據新的 state 重新渲染 
 			);
 		}
 	});
-	
+
 	ReactDOM.render(
 		<Avatar username="pwh" />,
 		document.getElementById("example")
@@ -598,48 +598,48 @@ React 中，資料流透過上面介紹過的`props`從擁有者到所擁有的�
 	    optionalNumber: React.PropTypes.number,
 	    optionalObject: React.PropTypes.object,
 	    optionalString: React.PropTypes.string,
-	
+
 	    // Anything that can be rendered: numbers, strings, elements or an array
 	    // (or fragment) containing these types.
 	    optionalNode: React.PropTypes.node,
-	
+
 	    // React 元素
 	    optionalElement: React.PropTypes.element,
-	
+
 	    // 你也可以宣告這個 prop 是 class 的實例
 	    // 使用 JS 的 instanceof 操作符的實例
 	    optionalMessage: React.PropTypes.instanceOf(Message),
-	
+
 	    // 可以把它當作 enum
 	    // 限制 prop 只接受指定的值
 	    optionalEnum: React.PropTypes.oneOf(['News', 'Photos']),
-	
+
 	    // 指定物件可以為多個類型中的一個
 	    optionalUnion: React.PropTypes.oneOfType([
 	      React.PropTypes.string,
 	      React.PropTypes.number,
 	      React.PropTypes.instanceOf(Message)
 	    ]),
-	
+
 	    // 由指定類型組成的陣列
 	    optionalArrayOf: React.PropTypes.arrayOf(React.PropTypes.number),
-	
+
 	    // 物件有指定類型的屬性
 	    optionalObjectOf: React.PropTypes.objectOf(React.PropTypes.number),
-	
+
 	    // 指定物件的參數
 	    optionalObjectWithShape: React.PropTypes.shape({
 	      color: React.PropTypes.string,
 	      fontSize: React.PropTypes.number
 	    }),
-	
+
 	    // 可以在任何類型後面加上 `isRequired` 來使 prop 不可為空
 	    // 會給出警告訊息
 	    requiredFunc: React.PropTypes.func.isRequired,
-	
+
 	    // 可以是任意類型，但是不可為空
 	    requiredAny: React.PropTypes.any.isRequired,
-	
+
 	    // 可以自定義驗證。如果驗證錯誤，要回傳 Error 物件
 	    // 不能使用`console.warn`或 throw，因為`oneOfType`會失效
 	    customProp: function(props, propName, componentName) {
@@ -735,7 +735,7 @@ React 支援以宣告的方式來定義`props`的預設值。
 			);
 		}
 	});
-	
+
 	ReactDOM.render(
 		<TickTock />,
 		document.getElementById('example')
@@ -773,7 +773,7 @@ React 支援以宣告的方式來定義`props`的預設值。
 			);
 		}
 	}
-	
+
 	Counter.propTypes = {initialCount: React.PropTypes.number};
 	Counter.defaultProps = {initialCount: 0};
 
@@ -888,10 +888,10 @@ This simplified component API is intended for components that are pure functions
 			var {checked, title, ...other} = this.props;
 			var fancyClass = checked ? 'FancyChecked' : 'FancyUnchecked';
 			var fancyTitle = checked ? 'X ' + title : 'O ' + title;
-		
+
 			return (
 				<label>
-					<input {...other} 
+					<input {...other}
 						checked={checked}
 						className={fancyClass}
 						type="checkbox"
@@ -1042,7 +1042,7 @@ Rest 屬性可以把對象剩下的屬性提取到一個新的對象。會把所
 ### 為什麼`<textarea>`使用`value`屬性？
 在 HTML 中，`<textarea>`的值通常使用子節點設置：
 
-	<!--反例：在React中不要這樣使用！--> 
+	<!--反例：在React中不要這樣使用！-->
 	<textarea name="description">This is the description.</textarea>
 
 對 HTML 而言，讓開發者設置多行的值很容易。然而，因為 React 是 JavaScript，沒有字符限制，可以使用`\n`實現換行。簡言之，React 已經有`value`、`defaultValue`屬性，`</textarea>`元件的子節點扮演什麼角色就有點模棱兩可了。基於此，設置`<textarea>`值時不應該使用子節點：
@@ -1087,91 +1087,162 @@ React 是很快的，因为它從不直接操作 DOM。React 在内存中維護�
 React 提供生命周期方法，你可以在這些方法中放入自己的程式碼。我們提供 **will** 方法，會在某些行為發生之前調用，和 **did** 方法，會在某些行為發生之後調用。
 
 ### 掛載
-getInitialState(): object在组件被挂载之前调用。状态化的组件应该实现这个方法，返回初始的state数据。
-componentWillMount()在挂载发生之前立即被调用。
-componentDidMount()在挂载结束之后马上被调用。需要DOM节点的初始化操作应该放在这里。
+* `getInitialState()：object`在元件被掛載之前调用。Stateful 元件應該實現這個方法，返回初始的 state 資料。
+* `componentWillMount()`在掛載發生之前立即被调用。
+* `componentDidMount()`在掛載結束後馬上被調用。需要 DOM 節點的初始化操作應該放在這裡。
+
 ### 更新
-componentWillReceiveProps(object nextProps)当一个挂载的组件接收到新的props的时候被调用。该方法应该用于比较this.props和nextProps，然后使用this.setState()来改变state。
-shouldComponentUpdate(object nextProps, object nextState): boolean当组件做出是否要更新DOM的决定的时候被调用。实现该函数，优化this.props和nextProps，以及this.state和nextState的比较，如果不需要React更新DOM，则返回false。
-componentWillUpdate(object nextProps, object nextState)在更新发生之前被调用。你可以在这里调用this.setState()。
-componentDidUpdate(object prevProps, object prevState)在更新发生之后调用。
+* `componentWillReceiveProps(object nextProps)`當一個掛載的元件接收到新的 props 的時候被調用。該方法應該用於比較`this.props`和`nextProps`，然後使用`this.setState()`來改變state。
+* `shouldComponentUpdate(object nextProps, object nextState)：boolean`當元件做出是否要更新 DOM 的決定的時候被調用。實現該函數來作為`this.props`和`nextProps`，以及`this.state`和`nextState`的比較優化，如果不需要 React 更新 DOM，則返回 false。
+* `componentWillUpdate(object nextProps, object nextState)`在更新發生之前被調用。你**不可以**在這裡調用`this.setState()`。
+* `componentDidUpdate(object prevProps, object prevState)`在更新發生之後調用。
+
 ### 卸載
-componentWillUnmount()在组件移除和销毁之前被调用。清理工作应该放在这里。
-### 挂载的方法（Mounted Methods）
-挂载的复合组件也支持如下方法：
+* `componentWillUnmount()`在元件被卸載和刪除之前被调用。清理工作應該放在這裡。
 
-getDOMNode(): DOMElement可以在任何挂载的组件上面调用，用于获取一个指向它的渲染DOM节点的引用。
-forceUpdate()当你知道一些很深的组件state已经改变了的时候，可以在该组件上面调用，而不是使用this.setState()。
-## 跨浏览器支持和兼容代码（Browser Support and Polyfills）
-在Facebook，我们支持低版本的浏览器，包括IE8。我们已经写好兼容代码很长时间了，这能让我们写有远见的JS。这意味着我们没有零散的骇客代码充斥在我们的代码库里面，并且我们依然能够预计我们的代码“正常工作起来”。例如，不使用+new Date()，我们能够写Date.now()。 At Facebook, we support older browsers, including IE8. We've had polyfills in place for a long time to allow us to write forward-thinking JS. This means we don't have a bunch of hacks scattered throughout our codebase and we can still expect our code to "just work". For example, instead of seeing +new Date(), we can just write Date.now(). Since the open source React is the same as what we use internally, we've carried over this philosophy of using forward thinking JS.
+### 掛載的方法（Mounted Methods）
+掛載的複合元件也支持以下方法：
 
-In addition to that philosophy, we've also taken the stance that we, as authors of a JS library, should not be shipping polyfills as a part of our library. If every library did this, there's a good chance you'd be sending down the same polyfill multiple times, which could be a sizable chunk of dead code. If your product needs to support older browsers, chances are you're already using something like es5-shim.
+* `component.forceUpdate()`會在當你知道一些很深的元件 state 已經被改變而沒有使用`this.setState()`時可以在該元件上面調用。
 
-### 支持低版本浏览器的兼容代码
-kriskowal的es5-shim es5-shim.js 提供了以下react需要的api：
+## Browser Support and Polyfills
+在 Facebook，我們支援舊版的瀏覽器，包括 IE8。我已經花了很長時間來編寫相容代碼，讓我們可以邊寫超前思維的 JS。這位著我們沒有一些黑客可以充斥在我們程式碼中，並且我們依然能夠預期我們的程式碼"正常運作"。例如，不使用`+new Date()`，我們能夠寫`Date.now()`。我們在內部使用，的因此開源的 React 也是相同的。我們延續了這一理念運用在前瞻性思維的JS。
 
-Array.isArray
-Array.prototype.every
-Array.prototype.forEach
-Array.prototype.indexOf
-Array.prototype.map
-Date.now
-Function.prototype.bind
-Object.keys
-String.prototype.split
-String.prototype.trim
-kriskowal的es5-shim es5-sham.js 同样提供了以下react需要的api：
+In addition to that philosophy, we've also taken the stance that we, as authors of a JS library, should not be shipping polyfills as a part of our library. If every library did this, there's a good chance you'd be sending down the same polyfill multiple times, which could be a sizable chunk of dead code. If your product needs to support older browsers, chances are you're already using something like [es5-shim](https://github.com/es-shims/es5-shim).
 
-Object.create
-Object.freeze
-The unminified build of React needs the following from paulmillr's console-polyfill.
+### 支持舊版浏览器的兼容代码
+[kriskowal es5-shim](https://github.com/es-shims/es5-shim) 的`es5-shim.js`提供了以下 React 需要的 API：
 
-console.*
-When using HTML5 elements in IE8 including <section>, <article>, <nav>, <header>, and <footer>, it's also necessary to include html5shiv or a similar script.
+* `Array.isArray`
+* `Array.prototype.every`
+* `Array.prototype.forEach`
+* `Array.prototype.indexOf`
+* `Array.prototype.map`
+* `Date.now`
+* `Function.prototype.bind`
+* `Object.keys`
+* `String.prototype.split`
+* `String.prototype.trim`
 
-### Cross-browser Issues
-Although React is pretty good at abstracting browser differences, some browsers are limited or present quirky behaviors that we couldn't find a workaround for.
+[kriskowal es5-shim](https://github.com/es-shims/es5-shim) 的`es5-shim.js`也提供了以下 React 需要的 API：
 
-onScroll event on IE8
-On IE8 the onScroll event doesn't bubble and IE8 doesn't have an API to define handlers to the capturing phase of an event, meaning there is no way for React to listen to these events. Currently a handler to this event is ignored on IE8.
+* `Object.create`
+* `Object.freeze`
 
-See the onScroll doesn't work in IE8 GitHub issue for more information. ve carried over this philosophy of using forward thinking JS.
+The unminified build of React needs the following from [paulmillr's console-polyfill](https://github.com/paulmillr/console-polyfill).
 
-In addition to that philosophy, we've also taken the stance that we, as authors of a JS library, should not be shipping polyfills as a part of our library. If every library did this, there's a good chance you'd be sending down the same polyfill multiple times, which could be a sizable chunk of dead code. If your product needs to support older browsers, chances are you're already using something like es5-shim.
+* `console.*`
 
-### Polyfills Needed to Support Older Browsers
-es5-shim.js from kriskowal's es5-shim provides the following that React needs:
+當在 IE8 中使用 HTML5 元素，包括`<section>`,`<article>`,`<nav>`,`<header>`和 `<footer>`，它需要引入 [html5shiv](https://github.com/aFarkas/html5shiv) 或其他類似的腳本。
 
-Array.isArray
-Array.prototype.every
-Array.prototype.forEach
-Array.prototype.indexOf
-Array.prototype.map
-Date.now
-Function.prototype.bind
-Object.keys
-String.prototype.split
-String.prototype.trim
-es5-sham.js, also from kriskowal's es5-shim, provides the following that React needs:
-
-Object.create
-Object.freeze
-The unminified build of React needs the following from paulmillr's console-polyfill.
-
-console.*
-When using HTML5 elements in IE8 including <section>, <article>, <nav>, <header>, and <footer>, it's also necessary to include html5shiv or a similar script.
-
-### Cross-browser Issues
-Although React is pretty good at abstracting browser differences, some browsers are limited or present quirky behaviors that we couldn't find a workaround for.
+### 跨瀏覽器問題
+雖然 React 已經非常好的描述了瀏覽器的差異，有些瀏覽器是有限制的或呈現古怪的行為，我們無法照到一個解決方法。
 
 #### onScroll event on IE8
-On IE8 the onScroll event doesn't bubble and IE8 doesn't have an API to define handlers to the capturing phase of an event, meaning there is no way for React to listen to these events. Currently a handler to this event is ignored on IE8.
+在 IE8 中`onScroll`的事件不會觸發而且 IE8 沒有一個 API 定義處理程序可以抓到事件，意思是 React 沒有辦法監聽這些事件出反應。目前這一個事件處理程序在 IE8 被忽略。
 
-See the onScroll doesn't work in IE8 GitHub issue for more information.
-
-
+See the [onScroll doesn't work in IE8](https://github.com/facebook/react/issues/631) GitHub issue for more information.
 
 # Working With the Browser - Refs to Components
+在建立你的元件之後，你可能會想要"reach out"和在`render()`返回的元件實力上調用否些方法。通常來說，這樣是不必要的，因為活躍的資料流(Reactive data)總是確保最近的 props 被發送到每個從`render()`輸出的子級。然而，有一些情況下，它仍可能有必要或有益的。所以 React 提供`refs`的逃生艙口。當你需要做以下動作時，這些`refs`相當有用：找到由元件 render 的 DOM 標記（例如絕對位置），在大型的非 React 應用程式中使用 React 元件，或轉換現有的程式碼到 React。
+
+讓我們來看看如何獲得一個引用，然後潛入一個完整的例子。
+
+## 從 ReactDOM.render 回傳 ref
+為了不混淆你在你定義的元件的`render()`方法，[ReactDOM.render()](https://facebook.github.io/react/docs/top-level-api.html#reactdom.render) 將會回傳一個 reference 到你元件的 **backing instance**(或`null`的 [stateless 元件](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions))。
+
+	var myComponent = ReactDOM.render(<MyComponent />, myContainer);
+
+但是請記住，JSX 不回傳元件實例。只是一個 **ReactElement：**一個輕量級的表現，告訴 React 要掛載的元件應該長怎樣。
+
+	var myComponentElement = <MyComponent />; // 這只是一個 ReactElement
+
+	// Some code here...
+
+	var myComponentInstance = ReactDOM.render(myComponentElement, myContainer);
+	myComponentInstance.doSomething();
+
+> **Note：**  
+> 這個應該永遠只在頂層使用。在元件內部，讓你的`props`和`state`處理跟子元件的溝通，或使用可取得一個 ref（字符串屬性或回調函式）的其他方法之一。
+
+## ref 回調屬性
+React 支援一種特殊的屬性，你可以綁定到任何元件上。`ref`屬性可以是一個回調函式，而且這個回調函式會在元件被掛載後立即執行。reference 元件將會被當作參數來傳遞，而且回調函式可能會立刻使用元件，或者儲存 reference 到未來使用(或兩者都有)。
+
+作法很簡單，添加一個`ref`屬性到`render`回傳的東西上面去
+
+	render: function () {
+		return (
+			<TextInput ref={function(input) {
+				if (input != null) {
+					input.focus();
+				}
+			}} />
+		);
+	},
+
+或是使用 ES6 的 arrow function：
+
+	render: function () {
+		return <TextInput ref={(c) => this._input = c} />;
+	},
+	componentDidMount: function () {
+		this._input.focus();
+	},
+
+
+
+
+
+當附加裁判一個DOM組件如<DIV/>，你得到的DOM節點備用;附加裁判像<的TextInput/>複合組件時，你會得到陣營類實例。在後一種情況下，你可以調用該組件的方法，如果有的話被暴露在它的類定義。
+
+需要注意的是，當引用的組件被卸載，每當裁判的變化，舊的裁判將被稱為null作為一個參數。這可以防止存儲器洩漏，該實例是存儲，如在第一實施例的情況。另請注意，寫裁判與內聯函數表達式時，在這裡的例子，每一個做出反應等每次更新，裁判將被稱為空立即之前，它被稱為組件實例時看到一個不同的函數對象。
+
+## 完成示例
+  var  App  =  React . createClass ({ 
+    getInitialState :  function ()  { 
+      return  { userInput :  '' }; 
+    }, 
+    handleChange :  function ( e )  { 
+      this . setState ({ userInput :  e . target . value }); 
+    }, 
+    clearAndFocusInput :  function ()  { 
+      // Clear the input 
+      this . setState ({ userInput :  '' },  function ()  { 
+        // This code executes after the component is re-rendered 
+        this . refs . theInput . getDOMNode (). focus ();    // Boom! Focused! 
+      }); 
+    }, 
+    render :  function ()  { 
+      return  ( 
+        < div > 
+          < div  onClick = { this . clearAndFocusInput } > 
+            Click  to  Focus  and  Reset 
+          < /div> 
+          < input 
+            ref = "theInput" 
+            value = { this . state . userInput } 
+            onChange = { this . handleChange } 
+          /> 
+        < /div> 
+      ); 
+    } 
+  });
+在這個例子中， render函數返回一個<input />實例的描述。但是真正的實例通過this.refs.theInput獲取。只要render返回的某個子組件帶有ref="theInput"，this.refs.theInput就會獲取到正確的實例。這甚至對於更高層的（非DOM ）組件生效，例如<Typeahead ref="myTypeahead" />。
+
+## 總結
+Refs是一種給指定的子組件實例發送消息的很好的方式，從某種程度上來看，通過props和state來做這件事倒顯得不太方便。Refs are a great way to send a message to a particular child instance in a way that would be inconvenient to do via streaming Reactive props and state . They should, however, not be your go-to abstraction for flowing data through your application. By default, use the Reactive data flow and save ref s for use cases that are inherently non-reactive.
+
+### 優點：
+可以在組件類裡面定義任何公共的方法（比如在輸入之前的重置方法），然後通過refs來調用這些公共的方法（比如this.refs.myTypeahead.reset()）。
+管理DOM幾乎總是需要衝出“本地”組件的限制，比如通過this.refs.myInput.getDOMNode()獲取<input />元素的底層DOM節點。Refs是做這件事唯一可靠的方式。
+Refs 是被自動管理的！如果某個子級實例被銷毀了，它的ref 也會自動銷毀。不用考慮內存問題（除非你自己做一些瘋狂的操作，保存了什麼引用）。
+### 當心:
+絕不要在任何組件的render方法中訪問refs -或者在某個組件的render方法正在調用堆棧中運行的時候。
+If you want to preserve Google Closure Compiler Crushing resilience, make sure to never access as a property what was specified as a string. This means you must access using this.refs['myRefString'] if your ref was defined as ref="myRefString " .
+If you have not programmed several apps with React, your first inclination is usually going to be to try to use refs to "make things happen" in your app. If this is the case, take a moment and think more critically about where state should be owned in the component hierarchy. Often, it becomes clear that the proper place to "own" that state is at a higher level in the hierarchy. Placing the state there often eliminates any desire to use ref s to "make things happen" – instead, the data flow will usually accomplish your goal.
+
+
+
 # Tooling Integration
 # Add-Ons
 # Add-Ons - Animation
