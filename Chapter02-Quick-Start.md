@@ -12,7 +12,7 @@
 	// main.js
 	var React = require('react');
 	var ReactDOM = require('react-dom');
-	
+
 	ReactDOM.render(
 	  <h1>Hello, world!</h1>,
 	  document.getElementById('example')
@@ -25,7 +25,7 @@ To install React DOM and build your bundle after installing browserify:
 	$ browserify -t babelify main.js -o bundle.js
 
 ## 不藉由 npm 快速開始
-如果你還沒準備好使用 npm，你可以下載初学者教程包(Starter Kit)，包含了未預建置前的 React 和 React DOM 版本。
+如果你還沒準備好使用 npm，你可以下載初學者教程包(Starter Kit)，包含了未預建置前的 React 和 React DOM 版本。
 
 在 Starter Kit 的根目錄，建立一個包含以下內容的`helloworld.html`。
 
@@ -147,8 +147,8 @@ To install React DOM and build your bundle after installing browserify:
 
 在本教程的剩下部分，我們會在這個 script 標籤中編寫我們的 JavaScript 程式碼。我們沒有任何高端的頁面自動重整工具，所以在更動程式碼之後，需要手動重整瀏覽器來查看變化。按照你的步驟，啟動伺服器後，可以在瀏覽器中輸入`http://localhost:3000`。在沒對原始碼進行修改的前提下，第一次打開這個 URL 會看到我們計劃建立的完成品。當你準備好開始往下學習後，只需要刪掉上述程式碼中的`<script>`就可以了。
 
->**注意：**
->我們在這裡導入了 jQuery，因為想簡化未來 ajax 請求動作，但不代表 React 必須依靠 jQuery 才能運作。
+> **Note：**  
+> 我們在這裡導入了 jQuery，因為想簡化未來 ajax 請求動作，但不代表 React 必須依靠 jQuery 才能運作。
 
 ### 你的第一個元件
 React 中全是模塊化、可組裝的元件。以我們的評論框為例子，我們將有如下的元件結構：
@@ -175,7 +175,8 @@ React 中全是模塊化、可組裝的元件。以我們的評論框為例子�
 	  document.getElementById('content')
 	);
 
->**注意：**原生的 HTML 元素名以小寫字母開頭，而自定義的 React class name 以大寫字母開頭。
+>**Note：**  
+> 原生的 HTML 元素名以小寫字母開頭，而自定義的 React class name 以大寫字母開頭。
 
 #### JSX 格式
 首先你將會注意到 JavaScript 中類似 XML 的語法。我們有一個簡單的預編譯器，用於將這種語法糖轉換成純 JavaScript 代碼：
@@ -221,7 +222,7 @@ JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起�
 	    );
 	  }
 	});
-	
+
 	var CommentForm = React.createClass({
 	  render: function() {
 	    return (
@@ -234,17 +235,17 @@ JSX 語法是可選的，但是我們發現 JSX 格式比純 JavaScript 用起�
 
 接下來，更新`CommentBox`元件程式碼，使用新建立的元件：
 
-	// tutorial3.js 
-	var  CommentBox  =  React . createClass ({ 
-	  render :  function ()  { 
-	    return  ( 
-	      < div  className = "commentBox" > 
-	        < h1 > Comments < /h1> 
-	        < CommentList  /> 
+	// tutorial3.js
+	var  CommentBox  =  React . createClass ({
+	  render :  function ()  {
+	    return  (
+	      < div  className = "commentBox" >
+	        < h1 > Comments < /h1>
+	        < CommentList  />
 	        < CommentForm  />
-	       < /div> 
-	    ) ; 
-	  } 
+	       < /div>
+	    ) ;
+	  }
 	});
 
 注意我們是如何整合 HTML 標籤和我們所創建的元件。HTML 元件就是普通的 React 元件，就和你定義的元件一樣，只不過有一處不同。JSX 編譯器會自動重寫 HTML 標籤為 React.createElement(tagName) 表達式，其它什麼都不做。這是為了避免全局命名空間污染。
@@ -329,7 +330,7 @@ Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號�
 	    var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
 	    return { __html: rawMarkup };
 	  },
-	
+
 	  render: function() {
 	    return (
 	      <div className="comment">
@@ -369,7 +370,7 @@ Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號�
 	    );
 	  }
 	});
-	
+
 	ReactDOM.render(
 	  <CommentBox data={data} />,
 	  document.getElementById('content')
@@ -506,7 +507,7 @@ Markdown 是一種簡單的格式化內嵌文本的方式。例如，用星號�
 	    );
 	  }
 	});
-	
+
 	ReactDOM.render(
 	  <CommentBox url="/api/comments" pollInterval={2000} />,
 	  document.getElementById('content')
@@ -792,11 +793,11 @@ JSON API 返回資料如下：
 ## 第二步：利用 React，創建應用的一個靜態版本
 [JSFiddle 範例](https://jsfiddle.net/reactjs/yun1vgqb/light/)
 
-既然現在已經有了你的元件階層圖，就可以開始實作 app 了。最簡單的方式就是建立一版雖然有你的資料模型和渲染到 UI，但是沒有互動功能。拆分這兩個過程是最好的方式，因為構建一個靜態的版本僅需要大量的編寫，但不需要思考；但是添加互動功能卻需要大量的思考和少量的編寫。我們將會知道這是為什麼。
+既然現在已經有了你的元件階層圖，就可以開始實作 app 了。最簡單的方式就是建立一版雖然有你的資料模型和渲染到 UI，但是沒有互動功能。拆分這兩個過程是最好的方式，因為建立一個靜態的版本僅需要大量的編寫，但不需要思考；但是添加互動功能卻需要大量的思考和少量的編寫。我們將會知道這是為什麼。
 
 為了創建一個渲染資料模型的應用的靜態版本，你會想要建立一些可重複使用在其它元件，並且透過`props`傳遞資料。`props`是一種從父級向子級傳遞資料的方式。如果你對`state`概念熟悉，那麼**不要使用`state`**來建造這個靜態版本。`State`僅用於實現互動功能，也就是說，資料會隨著時間變化。因為這是一個靜態的應用版本，所以你並不需要`state`。
 
-你可以從上至下或者從下至上來建立。也就是說，你可以從元件階層的頂部開始建立這些元件（例如，從`FilterableProductTable`開始），或者從底部開始（`ProductRow`）。在簡單的應用中，通常情況下從上至下的方式更加簡單；在大型的專案中，從下至上的方式更加簡單，這樣也可以在構建的同時寫測試代碼。
+你可以從上至下或者從下至上來建立。也就是說，你可以從元件階層的頂部開始建立這些元件（例如，從`FilterableProductTable`開始），或者從底部開始（`ProductRow`）。在簡單的應用中，通常情況下從上至下的方式更加簡單；在大型的專案中，從下至上的方式更加簡單，這樣也可以在建立的同時寫測試代碼。
 
 在這步驟結束的時候，將會有一個可重複使用的元件 library 來渲染資料模型。這些元件將會只有`render()`方法，因為這是應用程式的一個靜態版本。位於階層頂部的元件（`FilterableProductTable`）將會使用資料模型作為`prop`。如果你改變底層資料模型，然後再次調用`React.render()`，UI 將會更新。查看 UI 如何被更新和什麼地方改變都是很容易的，因為 React 的**單向資料流**（也被稱作“單向綁定”）使得一切模組化，很容易查錯，並且速度很快。
 
@@ -866,6 +867,3 @@ React 讓這種資料流動非常明確，從而很容易理解應用程式是�
 讓我們思考下我們希望發生什麼。我們想確保無論使用者何時改變了表單，都要更新 state 來反映使用者的輸入。由於元件只能更新自己的 state，`FilterableProductTable`將會傳遞一個回調函數給`SearchBar`，此函數將會在 state 應該被改變的時候觸發。我們可以使用 input 的`onChange`事件來監聽使用者輸入，從而確定何時觸發回調函數。`FilterableProductTable`傳遞的回調函數將會調用`setState()`，然後應用程式將會被更新。
 
 雖然這聽起來有很多內容，但是實際上僅僅需要幾行代碼。並且關於數據在應用中如何流動真的非常清晰明確。
-
-
-

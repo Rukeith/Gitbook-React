@@ -367,7 +367,7 @@ HTML 實體可以插入到 JSX 的文本中：
 	<div aria-hidden={true} />
 
 # Interactivity and Dynamic UIs
-我們已經[學會如何使用 React 呈現數據](https://facebook.github.io/react/docs/displaying-data.html)。現在讓我們來學習如何建立互動的 UIs。
+我們已經[學會如何使用 React 呈現資料](https://facebook.github.io/react/docs/displaying-data.html)。現在讓我們來學習如何建立互動的 UIs。
 
 ## 簡單例子
 	var LikeButton = React.createClass({
@@ -427,7 +427,7 @@ React 裡，只需更新元件的 state，然後根據新的 state 重新渲染 
 
 * **計算所得資料：**不要擔心根據 state 來預先計算資料 —— 把所有的計算都放到`render()`裡更容易保證 UI 和資料的一致性。例如，在 state 裡有一個陣列，我們要把陣列長度渲染成字串，直接在`render()`裡使用`this.state.listItems.length + ' list items'`比把它儲存到 state 裡好的多。
 * **React 元件：**在`render()`裡使用當前 props 和 state 來創建它。
-* **基於 props 的重複數據：**盡可能使用 props 來作為唯一的資料來源。把 props 保存到 state 的一個有效的場景是需要知道它以前值的時候，因為 props 可能會因為父級元件重新渲染而變化。
+* **基於 props 的重複資料：**盡可能使用 props 來作為唯一的資料來源。把 props 保存到 state 的一個有效的場景是需要知道它以前值的時候，因為 props 可能會因為父級元件重新渲染而變化。
 
 # 複合元件 (Multiple Components)
 截至目前為止，我們已經學會如何用單個元件來顯示資料和處理使用者輸入。下一步讓我們來體驗 React 最激動人心的特性之一：**可組合性（composability）**。
@@ -933,7 +933,7 @@ Rest 屬性可以把對象剩下的屬性提取到一個新的對象。會把所
 	});
 
 # Forms
-諸如`<input>`、`<textarea>`、`<option>`這樣的表單元件不同於其他原生元件，因為他們可以透過使用者互動發生變化。這些元件提供的界面使響應使用者互動的表單數據處理更加容易。這些元件提供的介面，使得更容易地在 UI 上響應表單管理。
+諸如`<input>`、`<textarea>`、`<option>`這樣的表單元件不同於其他原生元件，因為他們可以透過使用者互動發生變化。這些元件提供的界面使響應使用者互動的表單資料處理更加容易。這些元件提供的介面，使得更容易地在 UI 上響應表單管理。
 
 關於`<form>`事件詳情請查看[表單事件](https://facebook.github.io/react/docs/events.html#form-events)。
 
@@ -1003,7 +1003,7 @@ Rest 屬性可以把對象剩下的屬性提取到一個新的對象。會把所
 		return <input type="text" defaultValue="Hello!" />;
 	}
 
-這個範例渲染出來的元素和**受限元件**一樣有一個初始值，但這個值用戶可以改變並會反應到界面上。
+這個範例渲染出來的元素和**受限元件**一樣有一個初始值，但這個值使用者可以改變並會反應到界面上。
 同樣地，類型為`radio`、`checkbox`的`<input>`支持`defaultChecked`屬性，`<select>`支持`defaultValue`屬性。
 
 	render: function () {
@@ -1037,7 +1037,7 @@ Rest 屬性可以把對象剩下的屬性提取到一個新的對象。會把所
 		return <input type="text" name="title" value="Untitled" />;
 	}
 
-該方法在任何時間點渲染組件以後，輸入框的值就應該*始終*為`Untitled`。
+該方法在任何時間點渲染元件以後，輸入框的值就應該*始終*為`Untitled`。
 
 ### 為什麼`<textarea>`使用`value`屬性？
 在 HTML 中，`<textarea>`的值通常使用子節點設置：
@@ -1060,7 +1060,7 @@ HTML 中`<select>`通常使用`<option>`的`selected`屬性設置選中狀態；
 		<option value="C">Cranberry</option>
 	</select>
 
-如果是不受限組件，則使用`defaultValue`替代。
+如果是不受限元件，則使用`defaultValue`替代。
 
 > **Note：**  
 > 可以向`value`屬性傳遞一個陣列，可以在`select`標籤中選擇多個選項：`<select multiple={true} value={['B', 'C']} />`。
@@ -1073,7 +1073,7 @@ React 是很快的，因为它從不直接操作 DOM。React 在内存中維護�
 
 另外，React 實現了一个完備的虛擬事件系统，儘管各個瀏覽器都有自己的怪異行為，React 確保所有事件物件都符合 W3C 規範，並且持續觸發，用一種高性能的方式跨瀏覽器（and everything bubbles consistently and in a performant way cross-browser）。你甚至可以在 IE8 中使用一些HTML5 的事件！
 
-大多數時候你應該待在 React 的 “虛擬瀏覽器” 世界裡，因为它性能更加好且容易理解。然而，有時你需要簡單地調用底層的 API，或者借助於第三方類似 jQuery 插件這種 library。React 為你提供了直接使用底層 DOM API 的途徑。
+大多數時候你應該待在 React 的 “虛擬瀏覽器” 世界裡，因为它性能更加好且容易理解。然而，有時你需要簡單地調用底層的 API，或者借助於第三方類似 jQuery 套件這種 library。React 為你提供了直接使用底層 DOM API 的途徑。
 
 ## `Refs`和`getDOMNode()`
 為了和瀏覽器互動，你將需要一個對 DOM 節點的引用。你可以在每個元素附上`ref`，它允許你引用元件的**backing instance**。如果您需要調用元件的必要功能，或者希望訪問底層 DOM 節點，這會非常有用。想了解更多關於 refs，包括如何有效地使用它們，請參閱我們的 [refs to components](https://facebook.github.io/react/docs/more-about-refs.html) 文件。
@@ -1199,7 +1199,7 @@ React 也支援在每個元件上使用字串當作 ref 屬性，雖然這種方
 1. 指定任何從`render`回傳的`ref`屬性，例如：  
 
 		<input ref="myInput" />
-	
+
 2. 在一些其他的代碼（通常是事件處理程序代碼），透過`this.refs`來存取 **backing instance**，例如：
 
 		var input = this.refs.myInput;
@@ -1259,7 +1259,7 @@ Refs 是一種給指定的子元件實例發送消息的很好的方式，從某
 ### 瀏覽器中的JSX轉換
 如果你喜歡使用 JSX，Babel 提供了 [in-browser ES6 and JSX transformer for development](http://babeljs.io/docs/usage/browser/) 叫做 browser.js。可以從`babel-core`的 npm 套件引入或是從 [CDNJS](http://cdnjs.com/libraries/babel-core)。用一個`<script type="text/babel">`標籤來觸發 JSX 轉換器。
 
-> **注意：** 
+> **Note：**
 > 瀏覽器中的 JSX 轉換器是相當大的，並且會在客戶端導致無謂的計算，這些計算是可以避免的。不要在生產環境使用 - 參考下一節。
 
 ### 生產環境化：預編譯 JSX
@@ -1282,14 +1282,14 @@ Refs 是一種給指定的子元件實例發送消息的很好的方式，從某
 	    return <div>Hello {this.props.name}</div>;
 	  }
 	});
-	
+
 	ReactDOM.render(<HelloMessage name="John" />, mountNode);
 	$ babel test.jsx
 	"use strict";
-	
+
 	var HelloMessage = React.createClass({
 	  displayName: "HelloMessage",
-	
+
 	  render: function render() {
 	    return React.createElement(
 	      "div",
@@ -1299,14 +1299,172 @@ Refs 是一種給指定的子元件實例發送消息的很好的方式，從某
 	    );
 	  }
 	});
-	
+
 	ReactDOM.render(React.createElement(HelloMessage, { name: "John" }), mountNode);
 
 ## 有用的開源項目
-開源社區開發了在幾款編輯器中集成 JSX 的插件和構建系統。點擊 [JSX 集成](https://github.com/facebook/react/wiki/Complementary-Tools#jsx-integrations)查看所有內容。
+開源社區開發了在幾款編輯器中集成 JSX 的套件和構建系統。點擊 [JSX 集成](https://github.com/facebook/react/wiki/Complementary-Tools#jsx-integrations)查看所有內容。
 
 # Add-Ons
+React add-ons 是為了建立 React 應用程式的一些有用模組的集合。這些功能**應當被視為實驗性的**，通常會比核心更常更新。
+
+* [`TransitionGroup`和`CSSTransitionGroup`](https://facebook.github.io/react/docs/animation.html)，用於處理動畫和轉換，這些通常實現起來都不簡單，例如在一個元件移除之前執行一段動畫。
+* [`LinkedStateMixin`](https://facebook.github.io/react/docs/two-way-binding-helpers.html)，用於簡化使用者表單輸入資料和元件的 state 之間的雙向綁定。
+* [`cloneWithProps`](https://facebook.github.io/react/docs/clone-with-props.html)，用於實現 React 元件的複製，同時改變它們的 props 。
+* [`createFragment`](https://facebook.github.io/react/docs/create-fragment.html)，建立一組外部鍵子級
+* [`update`](https://facebook.github.io/react/docs/update.html)，一個輔助方法，讓 JavaScript 中處理不可變資料更加容易。
+* [`PureRenderMixin`](https://facebook.github.io/react/docs/pure-render-mixin.html)，在某些場景下的性能檢測器。
+
+以下插件只存在於 React 開發版（未壓縮）：
+
+* [`TestUtils`](https://facebook.github.io/react/docs/test-utils.html)，簡單的輔助工具，用於編寫測試（僅存在於未壓縮版）.
+* [`Perf`](https://facebook.github.io/react/docs/perf.html)，用於性能測評，並幫助你檢查出可優化的功能。
+
+要取得這些插件，需要個別從 npm 安裝(例如, `npm install react-addons-pure-render-mixin`)。我們不支援沒有使用 npm 安裝的插件。當透過 npm 使用 react add-ons 的時候，只要簡單地用`require('react/addons')`替換`require('react')`來得到 React 的所有插件。
+
 # Add-Ons - Animation
+React 為動畫提供一個`ReactTransitonGroup`插件元件作為一個底層的 API，還有一個`ReactCSSTransitionGroup`來簡單地實現基本的CSS動畫和轉換。
+
+## High-level API：ReactCSSTransitionGroup
+`ReactCSSTransitionGroup`是以`ReactTransitionGroup`為基底的，在 React 元件進入或者離開DOM 的時候，它是一種簡單地執行 CSS 過渡和動畫的方式。這個的靈感來自於優秀的 [ng-animate](http://www.nganimate.org/) library。
+
+### 快速入門
+`ReactCSSTransitionGroup`是`ReactTransitions`的接口。這是一個簡單的元素，包含了所有你對其動畫感興趣的元件。這裡是一個例子，例子中我們讓列表項目淡入淡出。
+
+	var ReactCSSTransitionGroup = require("react-addons-css-transition-group");
+
+	var TodoList = React.createClass({
+		getInitialState: function () {
+			return {items: ["hello", "world", "clikc", "me"]}
+		},
+		handleAdd: function () {
+			var newItems = this.state.items.concat([prompt("Enter some text")]);
+			this.setState({items: newItems});
+		},
+		handleRemove: function (i) {
+			var newItems = this.state.items;
+			newItems.splice(i, 1);
+			this.setState({items: newItems});
+		},
+		render: function () {
+			var items = this.state.items.map(function (item, i) {
+				return (
+					<div key={item} onClick={this.handleRemove.bind(this, i)}>
+						{item}
+					</div>
+				)
+			}.bind(this));
+			return (
+				<div>
+					<button onClick={this.handleAdd}>Add Item</button>
+					<ReactCSSTransitionGroup transitionName="example" transitionEnterTimeout={500} transitionLevelTimeout={300}>
+						{items}
+					</ReactCSSTransitionGroup>
+				</div>
+			)
+		}
+	});
+
+> **Note：**
+> 你必須為ReactCSSTransitionGroup的所有子級提供鍵屬性，即使只渲染一項。這就是React確定哪一個子級插入了，移除了，或者停留在那裡。
+
+在這個組件當中，當一個新的項被添加到ReactCSSTransitionGroup，它將會被添加example-enter類，然後在下一時刻被添加example-enter-active CSS類。這是一個基於transitionName prop的約定。
+
+你可以使用這些類來觸發一個CSS動畫或者過渡。例如，嘗試添加這段CSS代碼，然後插入一個新的列表項：
+
+.example-enter  {
+  opacity :  0 . 01 ;
+  transition :  opacity  .5s  ease - in ;
+}
+
+.example-enter.example-enter-active  {
+  opacity :  1 ;
+}
+你將注意到，當你嘗試移除一項的時候，ReactCSSTransitionGroup保持該項在DOM裡。如果你正使用一個帶有插件的未壓縮的React構建版本，你將會看到一條警告：React期待一次動畫或者過渡發生。那是因為ReactCSSTransitionGroup保持你的DOM元素一直在頁面上，直到動畫完成。嘗試添加這段CSS代碼：
+
+.example-leave  {
+  opacity :  1 ;
+  transition :  opacity  .5s  ease - in ;
+}
+
+.example-leave.example-leave-active  {
+  opacity :  0 . 01 ;
+}
+一組動畫必須要掛載了才能生效
+為了能夠給它的子級應用過渡效果，ReactCSSTransitionGroup必須已經掛載到了DOM。下面的例子不會生效，因為ReactCSSTransitionGroup被掛載到新項，而不是新項被掛載到ReactCSSTransitionGroup裡。將這個與上面的快速開始部分比較一下，看看有什麼差異。
+
+  render :  function ()  {
+    var  items  =  this . state . items . map ( function ( item ,  i )  {
+      return  (
+        < div  key = { item }  onClick = { this . handleRemove . bind ( this ,  i )} >
+          < ReactCSSTransitionGroup  transitionName = "example" >
+            { item }
+          < /ReactCSSTransitionGroup>
+        < /div>
+      );
+    },  this );
+    return  (
+      < div >
+        < button  onClick = { this . handleAdd } > Add  Item < /button>
+        { items }
+      < / div>
+     );
+  }
+讓一項或者零項動起來（Animating One or Zero Items）
+雖然在上面的例子中，我們渲染了一個項目列表到ReactCSSTransitionGroup裡，ReactCSSTransitionGroup的子級可以是一個或零個項目。這使它能夠讓一個元素實現進入和離開的動畫。同樣，你可以通過移動一個新的元素來替換當前元素。隨著新元素的移入，當前元素移出。例如，我們可以由此實現一個簡單的圖片輪播器：
+
+var  ReactCSSTransitionGroup  =  React . addons . CSSTransitionGroup ;
+
+var  ImageCarousel  =  React . createClass ({
+  propTypes :  {
+    imageSrc :  React . PropTypes . string . isRequired
+  },
+  render :  function ()  {
+    return  (
+      < div >
+        < ReactCSSTransitionGroup  transitionName = "carousel" >
+          < img  src = { this . props . imageSrc }  key = { this . props . imageSrc }  />
+        < /ReactCSSTransitionGroup>
+       < /div>
+    );
+  }
+});
+禁用動畫
+如果你想，你可以禁用入場或者出場動畫。例如，有些時候，你可能想要一個入 ​​場動畫，不要出場動畫，但是ReactCSSTransitionGroup會在移除DOM節點之前等待一個動畫完成。你可以給ReactCSSTransitionGroup添加transitionEnter={false}或者transitionLeave={false} props來禁用這些動畫。
+
+注意：
+當使用ReactCSSTransitionGroup的時候，沒有辦法通知你在過渡效果結束或者在執行動畫的時候做一些複雜的運算。如果你想要更多細粒度的控制，你可以使用底層的ReactTransitionGroup API，該API提供了你自定義過渡效果所需要的函數。
+底層的API：ReactTransitionGroup
+ReactTransitionGroup是動畫的基礎。它可以通過React.addons.TransitionGroup得到。當子級被添加或者從其中移除（就像上面的例子）的時候，特殊的生命週期函數就會在它們上面被調用。
+
+componentWillEnter(callback)
+在組件被添加到已有的TransitionGroup中的時候，該函數和componentDidMount()被同時調用。這將會阻塞其它動畫觸發，直到callback被調用。該函數不會在TransitionGroup初始化渲染的時候調用。
+
+componentDidEnter()
+該函數在傳給componentWillEnter的callback函數被調用之後調用。
+
+componentWillLeave(callback)
+該函數在子級從ReactTransitionGroup中移除的時候調用。雖然子級被移除了，ReactTransitionGroup將會使它繼續在DOM中，直到callback被調用。
+
+componentDidLeave()
+該函數在willLeave callback被調用的時候調用（與componentWillUnmount是同一時間）。
+
+渲染一個不同的組件
+默認情況下ReactTransitionGroup渲染一個span。你可以通過提供一個component prop來改變這種行為。例如，以下是你將如何渲染一個<ul>：
+
+< ReactTransitionGroup  component = "ul" >
+   ...
+< /ReactTransitionGroup>
+每一個React能渲染的DOM組件都是可用的。但是，組件並不需要是一個DOM組件。它可以是任何你想要的React組件；甚至是你自己已經寫好的！
+
+注意：
+v0.12之前，當使用DOM組件的時候，組件 prop需要是一個指向React.DOM.*的引用。既然組件簡單地傳遞到了React.createElement，它必須是一個字符串。組裝的組件必須傳遞構造函數。
+任何額外的、用戶定義的屬性將會成為已渲染的組件的屬性。例如，以下是你將如何渲染一個帶有css類的<ul>：
+
+< ReactTransitionGroup  component = "ul"  className = "animated-list" >
+   ...
+< /ReactTransitionGroup>
+
 # Add-Ons - Two-Way Binding Helpers
 # Add-Ons - Test Utilities
 # Add-Ons - Cloning Elements

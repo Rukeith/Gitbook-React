@@ -6,11 +6,11 @@ React 元件套過`render()`的方法，接受輸入的資料和回傳顯示。�
 	    return <div>Hello {this.props.name}</div>;
 	  }
 	});
-	
+
 	React.render(<HelloMessage name="John" />, mountNode);
 
 ## 一個有狀態的元件
-除了​​接受輸入數據（透過`this.props`），元件還可以保持內部狀態數據（透過`this.state`）。當一個元件的狀態資料變化，渲染的標記將被重新調用`render()`更新畫面。
+除了​​接受輸入資料（透過`this.props`），元件還可以保持內部狀態資料（透過`this.state`）。當一個元件的狀態資料變化，渲染的標記將被重新調用`render()`更新畫面。
 
 	var Timer = React.createClass({
 	  getInitialState: function() {
@@ -31,11 +31,11 @@ React 元件套過`render()`的方法，接受輸入的資料和回傳顯示。�
 	    );
 	  }
 	});
-	
+
 	React.render(<Timer />, mountNode);
 
 ## 一個應用程式
-使用`props`和`state`，可以組合構建出一個小型的 Todo 應用程式。下面例子使用`state`去追蹤當前列表的項目以及使用者已經輸入的文本。儘管事件綁定似乎是以內聯的方式，但它們將被收集起來並以事件代理的方式實現。
+使用`props`和`state`，可以組合建立出一個小型的 Todo 應用程式。下面例子使用`state`去追蹤當前列表的項目以及使用者已經輸入的文本。儘管事件綁定似乎是以內聯的方式，但它們將被收集起來並以事件代理的方式實現。
 
 	var TodoList = React.createClass({
 	  render: function() {
@@ -71,14 +71,14 @@ React 元件套過`render()`的方法，接受輸入的資料和回傳顯示。�
 	    );
 	  }
 	});
-	
+
 	React.render(<TodoApp />, mountNode);
 
 ## 一個使用外部插件的元件
 React 是靈活的，並且提供 hooks 讓你跟其他 library 和 framework 串接。下面例子展現了一個案例，使用外部 Markdown library 實作即時轉換 textarea 的值。
 
 	var converter = new Showdown.converter();
-	
+
 	var MarkdownEditor = React.createClass({
 	  getInitialState: function() {
 	    return {value: 'Type some *markdown* here!'};
@@ -105,5 +105,5 @@ React 是靈活的，並且提供 hooks 讓你跟其他 library 和 framework �
 	    );
 	  }
 	});
-	
+
 	React.render(<MarkdownEditor />, mountNode);
