@@ -9,7 +9,7 @@ React 是一個由 Facebook 和 Instagram 用來建立使用者界面的 JavaScr
 ## 聲明式(Declarative)
 當資料變化後，React 概念上與點擊“刷新”按鈕類似，但僅會更新變化的部分。
 
-## 構建可組合的元件
+## 建立可組合的元件
 React 都是關於建立可重複使用的元件。事實上，透過 React 你*唯一*要做的事情就是建立元件。由於其良好的封裝性，元件使代碼可重複使用、測試和關注分離（separation of concerns）更加簡單。
 
 ## 給它5分鐘的時間
@@ -943,9 +943,9 @@ Rest 屬性可以把對象剩下的屬性提取到一個新的對象。會把所
 * `value`，用於`<input>`、`<textarea>`元件。
 * `checked`，用於類型為`checkbox`或者`radio`的`<input>`元件。
 * `selected`，用於`<option>`元件。
-在 HTML 中，`<textarea>`的值通過子節點設置；在 React 中則應該使用 value 代替。
+在 HTML 中，`<textarea>`的值透過子節點設置；在 React 中則應該使用 value 代替。
 
-表單元件可以通過在`onChange`屬性設置回調函數來監聽元件變化。當使用者做出以下互動時，`onChange`執行並通過瀏覽器做出響應：
+表單元件可以透過在`onChange`屬性設置回調函數來監聽元件變化。當使用者做出以下互動時，`onChange`執行並透過瀏覽器做出響應：
 
 * `<input>`或`<textarea>`的 value 發生變化時。
 * `<input>`的`checked`狀態改變時。
@@ -1232,11 +1232,11 @@ React 也支援在每個元件上使用字串當作 ref 屬性，雖然這種方
 對於複合元件，這個 reference 將參考元件 class的實例，所以你將可以調用被該 class 定義的任何方法。如果你需要存取元件的底層 DOM 節點，你可以使用 [ReactDOM.findDOMNode](https://facebook.github.io/react/docs/top-level-api.html#reactdom.finddomnode) 作為"太空艙"，但是我們並不建議，因為它會打破封裝而且在大多情況下，有一個更清晰的方式可以在 React model 內建構你的程式碼。
 
 ## 總結
-Refs 是一種給指定的子元件實例發送消息的很好的方式，從某種程度上來看，通過`props`和`state`來做這件事倒顯得不太方便。They should, however, not be your go-to abstraction for flowing data through your application. By default, use the Reactive data flow and save ref s for use cases that are inherently non-reactive.
+Refs 是一種給指定的子元件實例發送消息的很好的方式，從某種程度上來看，透過`props`和`state`來做這件事倒顯得不太方便。They should, however, not be your go-to abstraction for flowing data through your application. By default, use the Reactive data flow and save ref s for use cases that are inherently non-reactive.
 
 ### 優點：
-* 可以在元件 classes 裡面定義任何公共的方法（比如在預輸入的重置方法），然後通過 refs 來調用這些公共的方法（比如`this.refs.myTypeahead.reset()`）。在大多數的情況下，你可以使用內建的 React 資料流來取代使用 refs。
-* 執行 DOM 幾乎需要深入到 “原生的” 元件，比如通過 ref 獲取`<input />`元素的底層 DOM 節點。Refs 是做這件事唯一可靠的方式。
+* 可以在元件 classes 裡面定義任何公共的方法（比如在預輸入的重置方法），然後透過 refs 來調用這些公共的方法（比如`this.refs.myTypeahead.reset()`）。在大多數的情況下，你可以使用內建的 React 資料流來取代使用 refs。
+* 執行 DOM 幾乎需要深入到 “原生的” 元件，比如透過 ref 獲取`<input />`元素的底層 DOM 節點。Refs 是做這件事唯一可靠的方式。
 * Refs 是被自動管理的！如果某個子級實例被銷毀了，它的 ref 也會自動銷毀。不用考慮內存問題（除非你自己做一些瘋狂的操作，保存了什麼 reference）。
 
 ### 當心:
@@ -1246,14 +1246,14 @@ Refs 是一種給指定的子元件實例發送消息的很好的方式，從某
 * Refs may not be attached to a [stateless function](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions), because the component does not have a backing instance. You can always wrap a stateless component in a standard composite component and attach a ref to the composite component.
 
 # Tooling Integration
-每個專案都使用了不同的系統來構建和部署 JavaScript。我們嘗試盡量讓 React 不受環境影響。
+每個專案都使用了不同的系統來建立和部署 JavaScript。我們嘗試盡量讓 React 不受環境影響。
 
 ## React
 ### CDN-hosted React
-我們在我們的[下載頁面](https://facebook.github.io/react/downloads.html)提供了 React 的 CDN-hosted 版本。這些預構建的檔案使用 UMD 模塊格式。直接簡單地把它們放在`<script>`標籤中將會給在你的環境中插入一個全域的 React 物件。React 也可以在CommonJS和AMD環境下正常工作。
+我們在我們的[下載頁面](https://facebook.github.io/react/downloads.html)提供了 React 的 CDN-hosted 版本。這些預建立的檔案使用 UMD 模塊格式。直接簡單地把它們放在`<script>`標籤中將會給在你的環境中插入一個全域的 React 物件。React 也可以在CommonJS和AMD環境下正常工作。
 
 ### 使用主分支
-我們在 [GitHub 倉庫](https://github.com/facebook/react)的主分支上有一些構建指令。我們在`build/modules`下構建了符合 CommonJS 模組規範的樹形目錄，你可以放置在任何環境或者使用任何打包工具，只要支援 CommonJS 規範。
+我們在 [GitHub 倉庫](https://github.com/facebook/react)的主分支上有一些建立指令。我們在`build/modules`下建立了符合 CommonJS 模組規範的樹形目錄，你可以放置在任何環境或者使用任何打包工具，只要支援 CommonJS 規範。
 
 ## JSX
 ### 瀏覽器中的JSX轉換
@@ -1303,7 +1303,7 @@ Refs 是一種給指定的子元件實例發送消息的很好的方式，從某
 	ReactDOM.render(React.createElement(HelloMessage, { name: "John" }), mountNode);
 
 ## 有用的開源項目
-開源社區開發了在幾款編輯器中集成 JSX 的套件和構建系統。點擊 [JSX 集成](https://github.com/facebook/react/wiki/Complementary-Tools#jsx-integrations)查看所有內容。
+開源社區開發了在幾款編輯器中集成 JSX 的套件和建立系統。點擊 [JSX 集成](https://github.com/facebook/react/wiki/Complementary-Tools#jsx-integrations)查看所有內容。
 
 # Add-Ons
 React add-ons 是為了建立 React 應用程式的一些有用模組的集合。這些功能**應當被視為實驗性的**，通常會比核心更常更新。
@@ -1375,16 +1375,16 @@ React 為動畫提供一個`ReactTransitonGroup`插件元件作為一個底層�
 	.example-enter {
 		opacity: 0.01;
 	}
-	
+
 	.example-enter.example-enter-active {
 		opacity: 1;
 		transition: opacity 500ms ease-in;
 	}
-	
+
 	.example-leave {
 		opacity: 1;
 	}
-	
+
 	.example-leave.example-leave-active {
 		opacity: 0.01;
 		transition: opacity 300ms ease-in;
@@ -1408,7 +1408,7 @@ React 為動畫提供一個`ReactTransitonGroup`插件元件作為一個底層�
 	.example-appear {
 		opacity: 0.01;
 	}
-	
+
 	.example-appear.example-appear-active {
 		opacity: 1;
 		transition: opacity .5s ease-in;
@@ -1434,7 +1434,7 @@ React 為動畫提供一個`ReactTransitonGroup`插件元件作為一個底層�
 	    } }>
 	    {item}
 	  </ReactCSSTransitionGroup>
-	
+
 	  <ReactCSSTransitionGroup
 	    transitionName={ {
 	      enter: 'enter',
@@ -1470,7 +1470,7 @@ React 為動畫提供一個`ReactTransitonGroup`插件元件作為一個底層�
 雖然在上面的例子中，我們渲染了一個項目列表到`ReactCSSTransitionGroup`裡，但是`ReactCSSTransitionGroup`的子級可以是一個或沒有項目。這使它能夠讓單一元素實現 enter 和 leave 的動畫。同樣，你可以透過移動一個新的元素來替換當前元素。隨著新元素的移入，當前元素移出。例如，我們可以由此實現一個簡單的 carousel：
 
 	var ReactCSSTransitionGroup = require("react-addons-css-transition-group");
-	
+
 	var ImageCarousel = React.createClass({
 		propTypes: {
 			imageSrc: React.PropTypes.string.isRequired
