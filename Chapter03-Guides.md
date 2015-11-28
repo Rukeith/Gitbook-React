@@ -1366,106 +1366,170 @@ React 為動畫提供一個`ReactTransitonGroup`插件元件作為一個底層�
 	});
 
 > **Note：**
-> 你必須為ReactCSSTransitionGroup的所有子級提供鍵屬性，即使只渲染一項。這就是React確定哪一個子級插入了，移除了，或者停留在那裡。
+> 你必須為`ReactCSSTransitionGroup`的所有子級提供[`key`屬性](https://facebook.github.io/react/docs/multiple-components.html#dynamic-children)，即使只渲染一項。這就是 React 決定哪一個子級插入、移除，或者停留在那裡。
 
-在這個組件當中，當一個新的項被添加到ReactCSSTransitionGroup，它將會被添加example-enter類，然後在下一時刻被添加example-enter-active CSS類。這是一個基於transitionName prop的約定。
+在這個元件當中，當一個新的項目被添加到`ReactCSSTransitionGroup`，它將會取得`example-enter`的 CSS class，然後在下一刻添加`example-enter-active` CSS class。這是一個基於`transitionName` prop 的約定。
 
-你可以使用這些類來觸發一個CSS動畫或者過渡。例如，嘗試添加這段CSS代碼，然後插入一個新的列表項：
+你可以使用這些 class 來觸發一個 CSS 動畫或者過渡。例如，嘗試添加這段 CSS 程式碼，然後貼家一個新的列表項：
 
-.example-enter  {
-  opacity :  0 . 01 ;
-  transition :  opacity  .5s  ease - in ;
-}
+	.example-enter {
+		opacity: 0.01;
+	}
+	
+	.example-enter.example-enter-active {
+		opacity: 1;
+		transition: opacity 500ms ease-in;
+	}
+	
+	.example-leave {
+		opacity: 1;
+	}
+	
+	.example-leave.example-leave-active {
+		opacity: 0.01;
+		transition: opacity 300ms ease-in;
+	}
 
-.example-enter.example-enter-active  {
-  opacity :  1 ;
-}
-你將注意到，當你嘗試移除一項的時候，ReactCSSTransitionGroup保持該項在DOM裡。如果你正使用一個帶有插件的未壓縮的React構建版本，你將會看到一條警告：React期待一次動畫或者過渡發生。那是因為ReactCSSTransitionGroup保持你的DOM元素一直在頁面上，直到動畫完成。嘗試添加這段CSS代碼：
+你將注意到，動畫的延遲時間需要被設定在 CSS 和 render 方法中;這告訴 React 什麼時候從元素移除動畫的 classes 和什麼時候從 DOM 移除元素
 
-.example-leave  {
-  opacity :  1 ;
-  transition :  opacity  .5s  ease - in ;
-}
+### 動畫初始掛載
+`ReactCSSTransitionGroup`提供了非必要的 prop `transitionAppear`，用來在元件初次掛載時添加額外的 transition phase。在一般沒有 transition phase 的初次掛載時，`transitionAppear`的預設值是`false`。接下來的範例是設定`transitionAppear`的值是`true`
 
-.example-leave.example-leave-active  {
-  opacity :  0 . 01 ;
-}
-一組動畫必須要掛載了才能生效
-為了能夠給它的子級應用過渡效果，ReactCSSTransitionGroup必須已經掛載到了DOM。下面的例子不會生效，因為ReactCSSTransitionGroup被掛載到新項，而不是新項被掛載到ReactCSSTransitionGroup裡。將這個與上面的快速開始部分比較一下，看看有什麼差異。
+	render: function () {
+		return (
+			<ReactCSSTransitionGroup transitionName="example" transitionAppear={true} transitionAppearTimeout={500}>
+				<h1>Fading at Initial Mount</h1>
+			</ReactCSSTransitionGroup>
+		);
+	}
 
-  render :  function ()  {
-    var  items  =  this . state . items . map ( function ( item ,  i )  {
-      return  (
-        < div  key = { item }  onClick = { this . handleRemove . bind ( this ,  i )} >
-          < ReactCSSTransitionGroup  transitionName = "example" >
-            { item }
-          < /ReactCSSTransitionGroup>
-        < /div>
-      );
-    },  this );
-    return  (
-      < div >
-        < button  onClick = { this . handleAdd } > Add  Item < /button>
-        { items }
-      < / div>
-     );
-  }
-讓一項或者零項動起來（Animating One or Zero Items）
-雖然在上面的例子中，我們渲染了一個項目列表到ReactCSSTransitionGroup裡，ReactCSSTransitionGroup的子級可以是一個或零個項目。這使它能夠讓一個元素實現進入和離開的動畫。同樣，你可以通過移動一個新的元素來替換當前元素。隨著新元素的移入，當前元素移出。例如，我們可以由此實現一個簡單的圖片輪播器：
+在初次掛載的過程中，`ReactCSSTransitionGroup`將會取得`example-appear` CSS class 和在下一刻添加`example-appear-active` CSS class。
 
-var  ReactCSSTransitionGroup  =  React . addons . CSSTransitionGroup ;
+	.example-appear {
+		opacity: 0.01;
+	}
+	
+	.example-appear.example-appear-active {
+		opacity: 1;
+		transition: opacity .5s ease-in;
+	}
 
-var  ImageCarousel  =  React . createClass ({
-  propTypes :  {
-    imageSrc :  React . PropTypes . string . isRequired
-  },
-  render :  function ()  {
-    return  (
-      < div >
-        < ReactCSSTransitionGroup  transitionName = "carousel" >
-          < img  src = { this . props . imageSrc }  key = { this . props . imageSrc }  />
-        < /ReactCSSTransitionGroup>
-       < /div>
-    );
-  }
-});
-禁用動畫
-如果你想，你可以禁用入場或者出場動畫。例如，有些時候，你可能想要一個入 ​​場動畫，不要出場動畫，但是ReactCSSTransitionGroup會在移除DOM節點之前等待一個動畫完成。你可以給ReactCSSTransitionGroup添加transitionEnter={false}或者transitionLeave={false} props來禁用這些動畫。
+在初次掛載的時候，所有`ReactCSSTransitionGroup`的子級將會`apear`而不是`enter`。然而，所有的子級之後會添加到一個現存的`ReactCSSTransitionGroup `，將會是`enter`而不是`appear`。
 
-注意：
-當使用ReactCSSTransitionGroup的時候，沒有辦法通知你在過渡效果結束或者在執行動畫的時候做一些複雜的運算。如果你想要更多細粒度的控制，你可以使用底層的ReactTransitionGroup API，該API提供了你自定義過渡效果所需要的函數。
-底層的API：ReactTransitionGroup
-ReactTransitionGroup是動畫的基礎。它可以通過React.addons.TransitionGroup得到。當子級被添加或者從其中移除（就像上面的例子）的時候，特殊的生命週期函數就會在它們上面被調用。
+> **Note：**  
+> `transitionAppear`在 0.13 版的時候添加到`ReactCSSTransitionGroup`。為了達到向下相容，他的預設值被設為`false`。
 
-componentWillEnter(callback)
-在組件被添加到已有的TransitionGroup中的時候，該函數和componentDidMount()被同時調用。這將會阻塞其它動畫觸發，直到callback被調用。該函數不會在TransitionGroup初始化渲染的時候調用。
+### 自定義 Classes
+不過同時也可以在 transition 中的每一個步驟中使用自定義的 class。你可以傳遞一個包含了`enter`或是`leave` class 的物件，或是包含了`enter`、`enter-active`、`leave-active`和`leave` class 的物件，而不需要傳遞字串給`transitionName`。如果只提供`enter`和`leave` classes，`leave-active`和`enter-active` classes 將追加'-active“ class 在最後。以下有兩個使用自定義 classes 的範例：
 
-componentDidEnter()
-該函數在傳給componentWillEnter的callback函數被調用之後調用。
+	...
+	  <ReactCSSTransitionGroup
+	    transitionName={ {
+	      enter: 'enter',
+	      enterActive: 'enterActive',
+	      leave: 'leave',
+	      leaveActive: 'leaveActive',
+	      appear: 'appear',
+	      appearActive: 'appearActive'
+	    } }>
+	    {item}
+	  </ReactCSSTransitionGroup>
+	
+	  <ReactCSSTransitionGroup
+	    transitionName={ {
+	      enter: 'enter',
+	      leave: 'leave',
+	      appear: 'appear'
+	    } }>
+	    {item2}
+	  </ReactCSSTransitionGroup>
+	  ...
 
-componentWillLeave(callback)
-該函數在子級從ReactTransitionGroup中移除的時候調用。雖然子級被移除了，ReactTransitionGroup將會使它繼續在DOM中，直到callback被調用。
+### 一組動畫必須在掛載後才能運作
+為了能夠讓它的子級運用 transition，`ReactCSSTransitionGroup`必須已經掛載到了 DOM 或是`transitionAppear`屬性必須要設為`true`。下面的例子不會生效，因為`ReactCSSTransitionGroup`被掛載到新的列表項，而不是新的列表項被掛載到`ReactCSSTransitionGroup`裡面。將這個與上面的快速開始部分比較一下，看看有什麼差異。
 
-componentDidLeave()
-該函數在willLeave callback被調用的時候調用（與componentWillUnmount是同一時間）。
+	render: function () {
+		var items = this.state.items.map(function () {
+			return (
+				<div key={item} onClick={this.handleRemove.bind(this, i)}>
+					<ReactCSSTransitionGroup transitionName="example">
+						{item}
+					</ReactCSSTransitionGroup>
+				</div>
+			);
+		}, this);
+		return (
+			<div>
+				<button onClick={this.handleAdd}>Add Item</button>
+				{items}
+			</div>
+		);
+	}
 
-渲染一個不同的組件
-默認情況下ReactTransitionGroup渲染一個span。你可以通過提供一個component prop來改變這種行為。例如，以下是你將如何渲染一個<ul>：
+### Animating One or Zero Items
+雖然在上面的例子中，我們渲染了一個項目列表到`ReactCSSTransitionGroup`裡，但是`ReactCSSTransitionGroup`的子級可以是一個或沒有項目。這使它能夠讓單一元素實現 enter 和 leave 的動畫。同樣，你可以透過移動一個新的元素來替換當前元素。隨著新元素的移入，當前元素移出。例如，我們可以由此實現一個簡單的 carousel：
 
-< ReactTransitionGroup  component = "ul" >
-   ...
-< /ReactTransitionGroup>
-每一個React能渲染的DOM組件都是可用的。但是，組件並不需要是一個DOM組件。它可以是任何你想要的React組件；甚至是你自己已經寫好的！
+	var ReactCSSTransitionGroup = require("react-addons-css-transition-group");
+	
+	var ImageCarousel = React.createClass({
+		propTypes: {
+			imageSrc: React.PropTypes.string.isRequired
+		},
+		render: function () {
+			return (
+				<div>
+					<ReactCSSTransitionGroup transitionName="carousel" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+						<img src={this.props.imageSrc} key={this.props.imageSrc} />
+					</ReactCSSTransitionGroup>
+				</div>
+			)
+		}
+	});
 
-注意：
-v0.12之前，當使用DOM組件的時候，組件 prop需要是一個指向React.DOM.*的引用。既然組件簡單地傳遞到了React.createElement，它必須是一個字符串。組裝的組件必須傳遞構造函數。
-任何額外的、用戶定義的屬性將會成為已渲染的組件的屬性。例如，以下是你將如何渲染一個帶有css類的<ul>：
+### 取消動畫
+如果你想，你可以禁用 enter 或者 leave 動畫。例如，有些時候，你可能想要一個 enter 動畫，而不想要 leave 動畫，但是`ReactCSSTransitionGroup`會在移除 DOM 節點之前等待一個動畫完成。你可以給`ReactCSSTransitionGroup`添加`transitionEnter={false}`或者`transitionLeave={false}` props 來取消這些動畫。
 
-< ReactTransitionGroup  component = "ul"  className = "animated-list" >
-   ...
-< /ReactTransitionGroup>
+> **Note：**  
+> 當使用`ReactCSSTransitionGroup`的時候，沒有辦法通知你在 transition 結束或者在執行動畫的時候做一些複雜的運算。如果你想要更多精密的控制操作，你可以使用 lower-level 的`ReactTransitionGroup` API，提供了你自定義 transition 所需要的函數。
+
+## Low-level API：ReactTransitionGroup
+`ReactTransitionGroup`是動畫的基礎。它可以透過`require("react-addons-transition-group")`存取。當子級被添加或者從其中移除（就像上面的例子）的時候，特殊的生命週期函數就會在它們上面被調用。
+
+**componentWillAppear(callback)**  
+這會跟元件在`TransitionGroup`初次掛載時的`componentDidMount()`同時被呼叫。它會在阻擋其他動畫運作直到`callback`被呼叫。只會在`TransitionGroup`初次渲染時呼叫。
+
+**componentDidAppear()**  
+這會在`componentWillAppear`的`callback`被呼叫後執行。
+
+**componentWillEnter(callback)**  
+在元件被添加到已有的`TransitionGroup`中的時候，會和`componentDidMount()`同時呼叫。它會擋住其它動畫執行，直到`callback`被呼叫。該函數不會在`TransitionGroup`初次渲染的時候調用。
+
+**componentDidEnter()**  
+這會在`componentWillEnter`的`callback`被呼叫後執行。
+
+**componentWillLeave(callback)**  
+在子級從`ReactTransitionGroup`中移除的時候調用。雖然子級被移除了，`ReactTransitionGroup`將會保持在 DOM 中，直到`callback`被調用。
+
+**componentDidLeave()**  
+該函數在 `componentWillLeave`的`callback`被調用的時候調用（與`componentWillUnmount`同一時間）。
+
+### 渲染一個不同的元件
+默認情況下`ReactTransitionGroup`會當作一個`span`渲染。你可以透過提供一個`component` prop來改變這種行為。例如，以下是如何渲染一個`<ul>`：
+
+	<ReactTransitionGroup component="ul">
+	   ...
+	</ReactTransitionGroup>
+
+每一個 React 能渲染的 DOM 元件都是可用的。然而，`component`並不需要是一個 DOM 元件。它可以是任何你想要的 React 元件；甚至是你自己已經寫好的！只需要編寫`component={List}`然後你的元件將會接收`this.props.children`。
+
+任何額外的、使用者定義的、屬性將會成為已渲染元件的屬性。例如，以下是你如何渲染一個帶有 CSS class 的`<ul>`：
+
+	<ReactTransitionGroup component="ul" className="animated-list">
+   		...
+	</ReactTransitionGroup>
 
 # Add-Ons - Two-Way Binding Helpers
+
 # Add-Ons - Test Utilities
 # Add-Ons - Cloning Elements
 # Add-Ons - Keyed Fragments
