@@ -1529,8 +1529,248 @@ React 為動畫提供一個`ReactTransitonGroup`插件元件作為一個底層�
 	</ReactTransitionGroup>
 
 # Add-Ons - Two-Way Binding Helpers
+`ReactLink`是一種簡單表達 React 雙向綁定的方式。
+
+> **Note：** 
+> 如果你是這個框架的初學者，記住`ReactLink`對於大多數應用來說都是不需要的，而且應該謹慎使用。
+
+在 React 裡面，資料流只有一個方向：從擁有者到子節點。這是因為根據 [the Von Neumann model of computing](http://www.wikiwand.com/en/Von_Neumann_architecture)，資料僅向一個方向傳遞。你可以認為它是"單向資料綁定"。
+
+然而，有很多應用需要你讀取一些資料，然後傳回給你的程式。例如，在開發表單的時候，當你接收到使用者輸入時，你會時常想更新某些 React `state`。或者你想在 JavaScript 中演算佈局，然後反應到某些DOM 元素的尺寸上。
+
+在 React 中，你可以通過監聽一個 "change" 事件來實現這個功能，從你的資料源（通常是 DOM）讀取，然後在你某個元件上呼叫`setState()`。"關閉資料流循環" 明顯會引導寫出更加容易理解的和維護的程式。查看我們的[表單文檔](https://facebook.github.io/react/docs/forms.html)來獲取更多信息。
+
+雙向綁定 -- 隱式地強制在 DOM 裡面的資料總是和某些 React `state`保持一致 -- 是簡明的，並且支持非常多的應用。我們已經提供`了ReactLink`：如上所述，是一種設置通用資料流循環模型的語法糖，或者說 "關聯" 某些資料到 React `state`。
+
+> **Note：**  
+> `ReactLink`僅僅是一個`onChange`/`setState()`模式​​的簡單包裝和約定。它不會從根本上改變資料在你的 React 應用中如何流動。
+
+## ReactLink： 前後對比
+這是一個簡單的表單範例，沒有使用`ReactLink`：
+
+	var NoLink = React.createClass({
+		getInitialState: function () {
+			return {message: "Hello"};
+		},
+		handleChange: function (event) {
+			this.setState({message: event.target.value});
+		},
+		render: function () {
+			var message = this.state.message;
+			return <input type="text" value={message} onChange={this.handleChange} />;
+		}
+	});
+
+這段程式碼運行地很好，資料如何流動是非常清晰的，但是，如果大量的表單，程式碼就會很冗長了。讓我們使用`ReactLink`來減少打字輸入：
+
+	var LinkedStateMixin = require("react-addons-linked-state-mixin");
+	
+	var WithLink = React.createClass({
+		mixins: [LinkedStateMixin],
+		getInitialState: function () {
+			return {message: "Hello"};
+		},
+		render: function () {
+			return <input type="text" valueLink={this.linkState("message")} />;
+		}
+	});
+
+`LinkedStateMixin`替你的 React 元件添加一個叫做`linkState()`的方法。`linkState()`返回一個`ReactLink`物件，包含 React state 當前的值和一個用來改變它的回調函數。
+
+`ReactLink`物件可以在樹中作為 props 被向上傳遞或者向下傳遞，所以這是很簡單（和明確地）的設定結構深層元件與存在高於結構的 state 之間的雙向綁定(a component deep in the hierarchy and state that lives higher in the hierarchy.)。
+
+注意，對於 checkbox 的 value 屬性，有一個特殊的行為，如果 checkbox 被選中（默認是`on`），value 屬性值將會在表單提交的時候發送出去。當 checkbox 被選中或者取消選中的時候，value 屬性是不會更新的。對於 checkbox，你應該使用`checkLink`而不是`valueLink`：`<input type="checkbox" checkedLink={this.linkState('booleanValue')} />`
+
+## 底層原理（Under the Hood）
+對於`ReactLink`，有兩方面：你創建`ReactLink`實例的地方和你使用它的地方。為了證明`ReactLink`是多麼的簡單，讓我們單獨地重寫每一塊兒，以便顯得更加明確。
+
+### ReactLink Without LinkedStateMixin
+
+	var WithoutMixin = React.createClass({
+		getInitialState: function () {
+			return {message: "Hello!"};
+		},
+		handleChange: function (newValue) {
+			this.setState({message: newValue});
+		},
+		render: function () {
+			var valueLink = {
+				value: this.state.message,
+				requestChange: this.handleChange
+			};
+			return <input type="text" valueLink={valueLink} />;
+		}
+	});
+
+如你所見，`ReactLink`無間是非常簡單的，僅僅有一個`value`和`requestChange`屬性。`LinkedStateMixin`也同樣簡單：它只填充這些區域，用來自於`this.state`的值和一個調用`this.setState()`的回調函數。
+
+### ReactLink Without valueLink
+
+	var LinkStateMixin = require("react-addons-linked-state-mixin");
+	
+	var WithoutLink = React.createClass({
+		mixins: [LinkStateMixin],
+		getInitialState: function () {
+			reutrn {messgae: "Hello!};
+		},
+		render: function () {
+			var valueLink = this.linkState("message");
+			var handleChange = function (e) {
+				valueLink.requestChange(e.target.value);
+			};
+			return <input type="text" value={valueLink.value} onChange={handleChange} />;
+		}
+	});
+
+`valueLink`屬性也很簡單。它簡單地處理`onChange`事件，然後調用`this.props.valueLink.requestChange()`，同時也用`this.props.valueLink.value`替換`this.props.value`。就這麼簡單！
 
 # Add-Ons - Test Utilities
+`ReactTestUtils`使你在選擇的測試框架中測試 React 元件變得簡單（我們使用 [Jest](https://facebook.github.io/jest/)）。
+
+	var ReactTestUtils = require("react-addons-test-utils");
+
+## 模擬
+
+	Simulate.{eventName}(
+		DOMElement element,
+		[object eventData]
+	)
+
+模擬事件在 DOM 節點上派發，附帶可選的`eventData`事件資料。**這可能是在`ReactTestUtils`中最有用的工具**。
+
+**點擊元素**
+
+	// <button ref="button">...</button>
+	var node = this.refs.button;
+	ReactTestUtils.Simulate.click(node);
+
+**改變輸入框的值並且按下 ENTER**
+
+	// <input ref="input" />
+	var node = this.refs.input;
+	node.value = "giraffe"
+	ReactTestUtils.Simulate.change(node);
+	ReactTestUtils.Simulate.keyDown(node, {key: "Enter", keyCode: 13, which: 13});
+
+*請注意，你必須提供你正在使用的元件的所有事件屬性，React 並不會提供這些給你。*
+`Simulate`有一個方法適用於每個事件，這些事件都是React能識別的。
+
+### renderIntoDocument
+	ReactComponent renderIntoDocument(
+		ReactElement instance
+	)
+
+把一個元件渲染到在文檔中一個分離的 DOM 節點。**這個函數需要 DOM。**
+
+> **Note：**  
+> 在你導入 React **之前**，你會需要全域都可以存得`window`和`window.document.createElement`。否則 React 會認為它無法存取 DOM 和一些像`setState`的方法將無法運作。
+
+### mockComponent
+	object mockComponent(
+		function componentClass,
+		[string mockTagName]
+	)
+
+傳遞一個虛擬的元件模塊給這個方法，給這個元件擴充一些有用的方法，讓元件能夠被當成一個 React 元件的仿製品來使用。這個元件將會變成一個簡單的`<div>`（或者是其它標籤，如果`mockTagName`提供了的話），包含任何提供的子節點，而不是像往常一樣渲染出來。
+
+### isElement
+	boolean isElement(
+		ReactElement element
+	)
+
+如果`element`是任何 ReactElement 的話就回傳`true`
+
+### isElementOfType
+	boolean isElementOfType(
+		ReactElement element,
+		function componentClass
+	)
+
+如果`element`是一個類型為 React `componentClass`的 ReactElement，則返回`true`。
+
+### isDOMComponent
+	boolean isDOMComponent(
+		ReactComponent instance
+	)
+
+如果`instance`是一個 DOM 元件（例如`<div>`或者`<span>`），則返回`true`。
+
+### isCompositeComponent
+	boolean isCompositeComponent(
+		ReactComponent instance
+	)
+
+如果`instance`是一個合成的元件（透過`React.createClass()`建立），則返回`true`。
+
+### isCompositeComponentWithType
+	boolean isCompositeComponentWithType(
+		ReactComponent instance,
+		function componentClass
+	)
+
+如果`instance`是一個合成的元件（通過`React.createClass()`創建），並且類型是React `componentClass`，則返回`true`。
+
+### findAllInRenderedTree
+	array findAllInRenderedTree(
+		ReactComponent tree,
+		function test
+	)
+
+遍歷`tree`中所有元件，搜集所有`test(component)`是返回`true`的所有元件。這個本身來說不是很有用，但是它可以為其它測試提供原始資料。
+
+### scryRenderedDOMComponentsWithClass
+	array scryRenderedDOMComponentsWithClass(
+		ReactComponent tree, string, className
+	)
+
+查找元件的所有實例，這些實例都在渲染後的樹中，並且是帶有`className`的 DOM 元件。
+
+### findRenderedDOMComponentWithClass
+	ReactComponent findRenderedDOMComponentWithClass(
+		ReactComponent tree,
+		string, className
+	)
+
+類似於`scryRenderedDOMComponentsWithClass()`，但是它只返回一個結果，如果有其它滿足條件的，則會拋出異常。
+
+### scryRenderedDOMComponentsWithTag
+	array scryRenderedDOMComponentsWithTag(
+		ReactComponent tree,
+		string tagName
+	)
+
+在渲染後的樹中找出所有元件實例，並且是標籤名字符合`tagName`的 DOM 元件。
+
+### findRenderedDOMComponentWithTag
+	ReactComponent findRenderedDOMComponentWithTag(
+		ReactComponent tree,
+		string tagName
+	)
+
+類似於`scryRenderedDOMComponentsWithTag()`，但是它只返回一個結果，如果有其它滿足條件的，則會拋出異常。
+
+### scryRenderedComponentsWithType
+	array scryRenderedComponentsWithType(
+		ReactComponent tree,
+		function componentClass
+	)
+
+找出所有元件實例，這些元件的類型為`componentClass`。
+
+### findRenderedComponentWithType
+	ReactComponent findRenderedComponentWithType(
+		ReactComponent tree, function componentClass
+	)
+
+類似於`scryRenderedComponentsWithType()`，但是它只返回一個結果，如果有其它滿足條件的，則會拋出異常。
+
+## Shallow rendering
+Shallow rendering 是一個實驗性的功能，能讓你渲染的元件只有"一層"。並宣稱返回的渲染方法，而不用擔心子級元件的行為是實例化或渲染。這個並不等於 DOM。
+
+	ReactShallowRenderer createRenderer()
+
+在你的測試中呼叫這個來建立一個 shallow renderer。
+
 # Add-Ons - Cloning Elements
 # Add-Ons - Keyed Fragments
 # Add-Ons - Immutability Helpers
