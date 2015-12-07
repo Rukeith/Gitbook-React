@@ -1769,9 +1769,61 @@ Shallow rendering 是一個實驗性的功能，能讓你渲染的元件只有"�
 
 	ReactShallowRenderer createRenderer()
 
-在你的測試中呼叫這個來建立一個 shallow renderer。
+在你的測試中呼叫這個來建立一個 shallow renderer。你可以把這個想做一個你想要測試的元件所渲染的"地方"，它可以回應事件和更新自己。
+
+	shallowRender.render(
+		ReactElement element
+	)
+
+相似於`ReactDOM.render`
+
+	ReactElement shallowRender.getRenderOutput()
+
+在`render`被呼叫過後，會回傳 shallowly rendered output。然後，您可以開始斷言關於輸出的事實。例如，如果你的元件渲染方法回傳：
+
+	<div>
+		<span className="heading">Title</span>
+		<Subcomponent foo="bar" />
+	</div>
+
+然後你就可以斷言：
+
+	result = renderer.getRenderOutput();
+	expect(result.type).toBe("dive");
+	expect(result.props.children).toEqual([
+		<span className="heading">Title</span>,
+		<Subcomponent foo="bar" />
+	]);
+
+Shallow testing 目前還有一些限制，亦即不支援 refs。我們在開發初期發佈了這項功能，希望 React 社群提供反饋，希望該如何實作。
 
 # Add-Ons - Cloning Elements
+> **Note：`cloneWithProps`已經棄用了，使用 [React.cloneElement](https://facebook.github.io/react/docs/top-level-api.html#react.cloneelement) 取代**
+
+在極少數應用場景中，你可能會想要建立一個 React 元素的副本，帶從原始元素而來的不同 props。一個範例是複製傳遞到`this.props.children`的元素，並且帶有不同 props 渲染它們。
+
+	var cloneWithProps = require("react-addons-clone-with-props");
+
+	var _makeBlue = function (element) {
+		return cloneWithProps(element, {style: {color: "blue"}});
+	};
+	
+	var Blue = React.creatClass({
+		render: function () {
+			var blueChildren = React.Children.map(this.props.children, _makeBlue);
+			return <div>{blueChildren}</div>;
+		}
+	});
+	
+	ReactDOM.render(
+		<Blue>
+			<p>This text is blue.</p>
+		</Blue>,
+		document.getElementById("container")
+	);
+
+`cloneWithProps`並不傳遞`key`或`refs`到複製的元素中。`className`和`style` props 會自動合併。
+
 # Add-Ons - Keyed Fragments
 # Add-Ons - Immutability Helpers
 # Add-Ons - PureRenderMixin
