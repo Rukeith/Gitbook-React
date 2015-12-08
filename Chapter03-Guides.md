@@ -1825,6 +1825,63 @@ Shallow testing 目前還有一些限制，亦即不支援 refs。我們在開�
 `cloneWithProps`並不傳遞`key`或`refs`到複製的元素中。`className`和`style` props 會自動合併。
 
 # Add-Ons - Keyed Fragments
+在大多數的情況下，你可以使用`key`prop 來設定從`render`返回的元素的 keys。然而，這會在一種情況失敗：如果你有兩個系列的子級，而且你需要重新排序。沒有辦法把 key 塞給每個系列而不添加包裝元素。
+
+也就是說，如果有一個元件，例如：
+
+	var Swapper = React.createClass({
+		propTypes: {
+			// `leftChildren` and `rightChildren` can be a string, element, array, etc.
+			leftChildren: React.PropTypes.node,
+			rightChildren: React.PropTypes.node,
+
+			swapped: React.PropTypes.bool
+		},
+		render: function () {
+			var children;
+			if (this.props.swapped) {
+				children = [this.props.rightChildren, this.props.leftChildren];
+			} else {
+				children = [this.props.leftChildren, this.props.rightChildren];
+			}
+			return <div>{children}</div>;
+		}
+	});
+
+這個子級將會在你改變`swapped`屬性後卸載或重新掛載，因為沒有任何 keys 設置在這兩個系列的子級。為了解決這個問題，你可以使用`createFragment` add-on 來給 keys 到這兩個系列的子級。
+
+**Array`<ReactNode>` createFragment(object children)**  
+取代創建陣列，我們寫：
+
+	var createFragment = require('react-addons-create-fragment');
+	
+	if (this.props.swapped) {
+	  children = createFragment({
+	    right: this.props.rightChildren,
+	    left: this.props.leftChildren
+	  });
+	} else {
+	  children = createFragment({
+	    left: this.props.leftChildren,
+	    right: this.props.rightChildren
+	  });
+	}
+
+傳遞物件(這裡指的是`left`和`right`)的 keys 會被用作對整個系列的子級，並且該物件的 keys 的順序會被用於確定渲染的子級們的順序。這種變化，這兩系列的子級將會被適當的重新排序在不卸載的 DOM。
+
+`createFragment`的回傳值應該被當作一個不透明的物件;你可以使用`React.Children`助手循環一個片段，但不應直接訪問。另外要注意，我們在這裡依靠 JavaScript 引擎在保存物件列舉順序，它不受規範保證，但被所有主流瀏覽器和虛擬機的非數字 keys 物件實作。
+
+> **Note：**  
+> 在未來，`createFragment`可能被 API 取代，例如
+> 
+> 	  return (
+>        <div>
+> 	  	      <x:frag key="right">{this.props.rightChildren}</x:frag>,
+> 	  	      <x:frag key="left">{this.props.leftChildren}</x:frag>
+>        </div>
+> 	  );
+> 允許你直接指定 keys 到 JSX 而不用添加包裹元素。
+
 # Add-Ons - Immutability Helpers
 # Add-Ons - PureRenderMixin
 # Add-Ons - Performance Tools
